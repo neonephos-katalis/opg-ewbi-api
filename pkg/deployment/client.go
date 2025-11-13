@@ -6,7 +6,7 @@ import (
 
 	k8scl "sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/metastore"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/metastore"
 )
 
 var _ Client = &client{}

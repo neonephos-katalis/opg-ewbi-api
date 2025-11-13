@@ -3,8 +3,8 @@ package metastore
 import (
 	"context"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/api/federation/models"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/uuid"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/uuid"
 )
 
 var _ Client = &k8sClient{}

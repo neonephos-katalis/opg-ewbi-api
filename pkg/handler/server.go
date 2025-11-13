@@ -8,10 +8,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/api/federation/models"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/api/federation/server"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/deployment"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/metastore"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/deployment"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/metastore"
 )
 
 var _ server.ServerInterface = &handler{}

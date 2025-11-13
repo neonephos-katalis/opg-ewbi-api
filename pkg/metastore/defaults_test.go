@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/api/federation/models"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 )
 
 func Test_defaultIfNil(t *testing.T) {

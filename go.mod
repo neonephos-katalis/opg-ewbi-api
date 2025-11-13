@@ -1,4 +1,4 @@
-module github.com/nbycomp/neonephos-opg-ewbi-api
+module github.com/neonephos-katalis/opg-ewbi-api
 
 go 1.24.6
 
@@ -15,7 +15,7 @@ require (
 	github.com/icza/gog v0.0.0-20241010132004-5da24f18211d
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/nbycomp/neonephos-opg-ewbi-operator v0.0.0-20251009115931-2d9115175920
+	github.com/nbycomp/neonephos-opg-ewbi-operator v0.0.1
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3

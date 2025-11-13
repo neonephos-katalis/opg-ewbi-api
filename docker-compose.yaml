@@ -7,7 +7,7 @@ secrets:
 
 services:
   federation:
-    image: registry.example.com/nearbyone/ewbi-opg-federation-api:neonephos
+    image: ghcr.io/neonephos-katalis/opg-ewbi-api:neonephos
     build:
       context: ./
       dockerfile: Dockerfile

@@ -5,7 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/uuid"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/uuid"
 )
 
 func (h *handler) ValidateAuthHeaders(c echo.Context) (statusCode int, err error) {

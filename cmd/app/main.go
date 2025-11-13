@@ -12,9 +12,9 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/nbycomp/neonephos-opg-ewbi-api/api/federation/server"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/cmd/app/config"
-	"github.com/nbycomp/neonephos-opg-ewbi-api/pkg/handler"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
+	"github.com/neonephos-katalis/opg-ewbi-api/cmd/app/config"
+	"github.com/neonephos-katalis/opg-ewbi-api/pkg/handler"
 	opgv1beta1 "github.com/nbycomp/neonephos-opg-ewbi-operator/api/v1beta1"
 )
 
