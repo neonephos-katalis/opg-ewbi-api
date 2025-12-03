@@ -89,7 +89,7 @@ func (m *UploadFile) k8sCustomResource(namespace string, opts ...Opt) (*opgv1bet
 		},
 		Status: opgv1beta1.FileStatus{
 			Phase: opgv1beta1.FilePhaseReady,
-			State: opgv1beta1.FileStatePending,
+			State: "Pending",
 		},
 	}
 	for _, opt := range opts {

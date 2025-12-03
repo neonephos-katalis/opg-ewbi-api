@@ -229,8 +229,7 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 	var state = obj.Status.State
 	if strings.TrimSpace(string(state)) == "" {
 		phase = opgv1beta1.FilePhaseReady
-		state = opgv1beta1.FileStatePending
-		//state = opgv1beta1.FileStatePending
+		state = "Pending"
 	}
 	var response = models.FileResponseData{
 		Phase: string(phase),
