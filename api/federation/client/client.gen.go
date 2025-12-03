@@ -3265,7 +3265,7 @@ type GetArtefactResponse struct {
 		ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 		// ArtefactVersionInfo Artefact version information
-		ArtefactVersionInfo string               `json:"artefactVersionInfo"`
+		ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
 		ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 		// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3330,6 +3330,7 @@ func (r GetCandidateZonesResponse) StatusCode() int {
 type UploadFileResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
+	JSON200File               *FileResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -5768,7 +5769,7 @@ func ParseGetArtefactResponse(rsp *http.Response) (*GetArtefactResponse, error) 
 			ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 			// ArtefactVersionInfo Artefact version information
-			ArtefactVersionInfo string               `json:"artefactVersionInfo"`
+			ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
 			ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 			// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -5918,6 +5919,12 @@ func ParseUploadFileResponse(rsp *http.Response) (*UploadFileResponse, error) {
 	}
 
 	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FileResponseData
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200File = &dest
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {

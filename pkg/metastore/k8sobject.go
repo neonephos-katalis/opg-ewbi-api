@@ -38,12 +38,27 @@ func (c *k8sClient) buildOwnerReferenceOption(federationContextID string) (Opt, 
 }
 
 func (c *k8sClient) createK8sObject(object k8scli.Object) error {
+	ctx := context.TODO()
+	//Tenativo di creazione con retry per problemi di sincronizzazione con l'API server di k8s
 	if err := c.kubernetes.Create(context.TODO(), object, &k8scli.CreateOptions{}); err != nil {
+		if k8serrors.IsAlreadyExists(err) {
+			//return errors.Wrapf(ErrAlreadyExists, "%s", errDetails)
+			existing := object.DeepCopyObject().(k8scli.Object)
+			key := k8scli.ObjectKeyFromObject(object) // Costruiamo la chiave (Namespace + Name) dall'oggetto stesso
+			// Facciamo la GET. Poiché 'object' è un puntatore, verrà popolato con i dati aggiornati
+			if getErr := c.kubernetes.Get(ctx, key, existing); getErr != nil {
+				return errors.Wrapf(getErr, "failed to get existing object")
+			}
+			object.SetResourceVersion(existing.GetResourceVersion())
+			object.SetUID(existing.GetUID()) // A volte necessario mantenere l'UID
+
+			if updateErr := c.kubernetes.Update(ctx, object); updateErr != nil {
+				return errors.Wrapf(updateErr, "failed to update existing object")
+			}
+			return nil
+		}
 		errDetails := fmt.Sprintf("Failed to create %s (ID: %s)", getObjectKind(object), getObjectID(object))
 		log.WithError(err).Error(errDetails)
-		if k8serrors.IsAlreadyExists(err) {
-			return errors.Wrapf(ErrAlreadyExists, "%s", errDetails)
-		}
 		return errors.Wrapf(err, "%s", errDetails)
 	}
 	return nil

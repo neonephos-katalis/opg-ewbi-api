@@ -329,16 +329,20 @@ func (c *k8sClient) UploadArtefact(ctx context.Context, artefact *UploadArtefact
 	return c.createK8sObject(obj)
 }
 
-func (c *k8sClient) UploadFile(ctx context.Context, file *UploadFile) error {
-	opt, err := c.buildOwnerReferenceOption(file.FederationContextId)
+func (c *k8sClient) UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error) {
+	opt, err := c.buildOwnerReferenceOption(file.FederationContextId) //Serve a legare la nuova risorsa a una risorsa genitore
 	if err != nil {
-		return err
+		return nil, err
 	}
 	obj, err := file.k8sCustomResource(c.getNamespace(), opt)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return c.createK8sObject(obj)
+	err = c.createK8sObject(obj)
+	if err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
 
 func (c *k8sClient) getNamespace() string {

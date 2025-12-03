@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -12,6 +13,7 @@ import (
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/deployment"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/metastore"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 var _ server.ServerInterface = &handler{}
@@ -207,6 +209,7 @@ func (h *handler) GetArtefact(c echo.Context, federationContextId models.Federat
 // (POST /{federationContextId}/files)
 func (h *handler) UploadFile(c echo.Context, federationContextId models.FederationContextId) error {
 	ctx := h.getRequestContextFunc(c)
+
 	request, err := models.NewUploadFileMultipartBody(c)
 	if err != nil {
 		detail := err.Error()
@@ -215,14 +218,26 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 		})
 	}
 
-	if err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
+	var obj *opgv1beta1.File
+	if obj, err = h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
 		UploadFileMultipartBody: request,
 		FederationContextId:     federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-
-	return c.JSON(http.StatusOK, nil)
+	var phase = obj.Status.Phase
+	var state = obj.Status.State
+	if strings.TrimSpace(string(state)) == "" {
+		phase = opgv1beta1.FilePhaseReady
+		state = opgv1beta1.FileStatePending
+		//state = opgv1beta1.FileStatePending
+	}
+	var response = models.FileResponseData{
+		Phase: string(phase),
+		State: string(state),
+	}
+	fmt.Printf("+++++++File response: %+v\n", response)
+	return c.JSON(http.StatusOK, response)
 }
 
 // Removes an image file from partner OP.

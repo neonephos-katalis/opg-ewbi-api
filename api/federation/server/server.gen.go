@@ -3291,7 +3291,7 @@ type GetArtefact200JSONResponse struct {
 	ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 	// ArtefactVersionInfo Artefact version information
-	ArtefactVersionInfo string                                     `json:"artefactVersionInfo"`
+	ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
 	ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 	// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3497,12 +3497,34 @@ type UploadFileResponseObject interface {
 }
 
 type UploadFile200Response struct {
+	Body    FileResponseData
+	Headers UploadFile200ResponseHeaders
+}
+
+// AGG
+type UploadFile200ResponseHeaders struct {
+	AcceptEncoding  string
+	ContentEncoding string
+	Location        string
 }
 
 func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept-Encoding", fmt.Sprint(response.Headers.AcceptEncoding))
+	w.Header().Set("Content-Encoding", fmt.Sprint(response.Headers.ContentEncoding))
+	w.Header().Set("Location", fmt.Sprint(response.Headers.Location))
 	w.WriteHeader(200)
-	return nil
+
+	return json.NewEncoder(w).Encode(response.Body)
 }
+
+//type UploadFile200Response struct {
+//}
+
+//func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
+//	w.WriteHeader(200)
+//	return nil
+//}
 
 type UploadFile400ApplicationProblemPlusJSONResponse struct {
 	N400ApplicationProblemPlusJSONResponse
@@ -3753,6 +3775,9 @@ type ViewFile200JSONResponse struct {
 
 	// RepoType Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
 	RepoType *UploadFileMultipartBodyRepoType `json:"repoType,omitempty"`
+
+	Phase string `json:"phase"`
+	State string `json:"state"`
 }
 
 func (response ViewFile200JSONResponse) VisitViewFileResponse(w http.ResponseWriter) error {
