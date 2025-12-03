@@ -63,3 +63,37 @@ func isValidApplicationInstanceStatus(status string) bool {
 func k8sCustomResourceNameFromApplicationInstance(federationContextID, appID string) string {
 	return fmt.Sprintf("%s-%s", applicationInstancePrefix, uuidV5Fn(federationContextID+"/"+appID))
 }
+
+func applicationInstanceFromK8sCustomResource(appInstanceID string, appInstance opgv1beta1.ApplicationInstance) (*ApplicationInstanceDetails, error) {
+	var accessPointInfos []models.AccessPointInfo
+	for _, api := range appInstance.Status.AccessPointInfo {
+		var accessPoints []models.AccessPoints
+		for _, ap := range api.AccessPoints {
+			accessPoints = append(accessPoints, models.AccessPoints{
+				Port:          int(ap.Port),
+				Fqdn:          ap.Fqdn,
+				Ipv4Addresses: ap.Ipv4Addresses,
+				Ipv6Addresses: ap.Ipv6Addresses,
+			})
+		}
+		accessPointInfos = append(accessPointInfos, models.AccessPointInfo{
+			InterfaceId:  models.InterfaceId(api.InterfaceId),
+			AccessPoints: accessPoints,
+		})
+	}
+	var GetAppInstanceDetails200JSONResponse *camara.GetAppInstanceDetails200JSONResponse
+	if len(accessPointInfos) > 0 {
+		GetAppInstanceDetails200JSONResponse = &camara.GetAppInstanceDetails200JSONResponse{
+			AppInstanceState: string(appInstance.Status.State),
+			AccessPointInfo:  accessPointInfos[0],
+		}
+	} else {
+		fmt.Printf("APP INSTANCE STATUS ACCESS POINT INFO IS NIL\n")
+		GetAppInstanceDetails200JSONResponse = &camara.GetAppInstanceDetails200JSONResponse{
+			AppInstanceState: string(appInstance.Status.State),
+		}
+	}
+	return &ApplicationInstanceDetails{
+		GetAppInstanceDetails200JSONResponse: GetAppInstanceDetails200JSONResponse,
+	}, nil
+}

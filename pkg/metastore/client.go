@@ -5,6 +5,7 @@ import (
 
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/uuid"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 var _ Client = &k8sClient{}
@@ -18,19 +19,20 @@ type Client interface {
 	RemoveFederation(ctx context.Context, federationContextID string) error
 
 	GetFile(ctx context.Context, federationContextID, id string) (*File, error)
-	UploadFile(ctx context.Context, file *UploadFile) error
+
+	UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error)
 	RemoveFile(ctx context.Context, federationContextID, id string) error
 
 	GetArtefact(ctx context.Context, federationContextID, id string) (*Artefact, error)
-	UploadArtefact(ctx context.Context, artefact *UploadArtefact) error
+	UploadArtefact(ctx context.Context, artefact *UploadArtefact) (*opgv1beta1.Artefact, error)
 	RemoveArtefact(ctx context.Context, federationContextID, id string) error
 
 	GetApplication(ctx context.Context, federationContextID, id string) (*Application, error)
-	OnboardApplication(ctx context.Context, app *OnboardApplication) error
+	OnboardApplication(ctx context.Context, app *OnboardApplication) (*opgv1beta1.Application, error)
 	UpdateApplicationStatus(ctx context.Context, federationCallbackID string, updates *models.AppStatusCallbackLinkJSONRequestBody) error
 	RemoveApplication(ctx context.Context, federationContextID, id string) error
 
-	AddApplicationInstance(ctx context.Context, dep *ApplicationInstance) error
+	AddApplicationInstance(ctx context.Context, dep *ApplicationInstance) (*opgv1beta1.ApplicationInstance, error)
 	GetApplicationInstance(ctx context.Context, federationContextID, id string) (*ApplicationInstance, error)
 	UpdateApplicationInstanceStatus(ctx context.Context, federationCallbackID string, updates *models.AppInstCallbackLinkJSONRequestBody) error
 	RemoveApplicationInstance(ctx context.Context, federationContextID, id string) error

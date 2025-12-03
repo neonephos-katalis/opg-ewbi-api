@@ -1739,11 +1739,21 @@ type InstallAppResponseObject interface {
 }
 
 type InstallApp202Response struct {
+	AppIdentifier string `json:"appInstanceId"`
+	ZoneId        string `json:"zoneId"`
+	State         string `json:"state"`
 }
 
 func (response InstallApp202Response) VisitInstallAppResponse(w http.ResponseWriter) error {
 	w.WriteHeader(202)
-	return nil
+	responsePayload := struct {
+		ZoneId        string `json:"zoneId"`
+		AppIdentifier string `json:"appInstanceId"`
+	}{
+		ZoneId:        response.ZoneId,
+		AppIdentifier: response.AppIdentifier,
+	}
+	return json.NewEncoder(w).Encode(responsePayload)
 }
 
 type InstallApp400ApplicationProblemPlusJSONResponse struct {
@@ -2099,10 +2109,9 @@ type GetAppInstanceDetailsResponseObject interface {
 
 type GetAppInstanceDetails200JSONResponse struct {
 	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccesspointInfo *AccessPointInfo `json:"accesspointInfo,omitempty"`
-
+	AccessPointInfo AccessPointInfo `json:"accessPointInfo,omitempty"`
 	// AppInstanceState Running status of the application instance.
-	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+	AppInstanceState string `json:"appInstanceState,omitempty"`
 }
 
 func (response GetAppInstanceDetails200JSONResponse) VisitGetAppInstanceDetailsResponse(w http.ResponseWriter) error {
@@ -2219,10 +2228,19 @@ type OnboardApplicationResponseObject interface {
 }
 
 type OnboardApplication202Response struct {
+	Body ApplicationResponseData
 }
 
 func (response OnboardApplication202Response) VisitOnboardApplicationResponse(w http.ResponseWriter) error {
-	w.WriteHeader(202)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
 	return nil
 }
 
@@ -3040,10 +3058,19 @@ type UploadArtefactResponseObject interface {
 }
 
 type UploadArtefact200Response struct {
+	Body ArtefactResponseData
 }
 
 func (response UploadArtefact200Response) VisitUploadArtefactResponse(w http.ResponseWriter) error {
-	w.WriteHeader(200)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
 	return nil
 }
 
@@ -3291,7 +3318,7 @@ type GetArtefact200JSONResponse struct {
 	ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 	// ArtefactVersionInfo Artefact version information
-	ArtefactVersionInfo string                                     `json:"artefactVersionInfo"`
+	ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
 	ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 	// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3497,10 +3524,19 @@ type UploadFileResponseObject interface {
 }
 
 type UploadFile200Response struct {
+	Body FileResponseData
 }
 
 func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
-	w.WriteHeader(200)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
 	return nil
 }
 
@@ -3753,6 +3789,9 @@ type ViewFile200JSONResponse struct {
 
 	// RepoType Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
 	RepoType *UploadFileMultipartBodyRepoType `json:"repoType,omitempty"`
+
+	Phase string `json:"phase"`
+	State string `json:"state"`
 }
 
 func (response ViewFile200JSONResponse) VisitViewFileResponse(w http.ResponseWriter) error {
