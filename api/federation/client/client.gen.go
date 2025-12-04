@@ -5919,12 +5919,9 @@ func ParseUploadFileResponse(rsp *http.Response) (*UploadFileResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest FileResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200File = &dest
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
+		return nil, nil
+
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {

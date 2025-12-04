@@ -3509,13 +3509,16 @@ type UploadFile200ResponseHeaders struct {
 }
 
 func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept-Encoding", fmt.Sprint(response.Headers.AcceptEncoding))
-	w.Header().Set("Content-Encoding", fmt.Sprint(response.Headers.ContentEncoding))
-	w.Header().Set("Location", fmt.Sprint(response.Headers.Location))
-	w.WriteHeader(200)
-
-	return json.NewEncoder(w).Encode(response.Body)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
+	return nil
 }
 
 //type UploadFile200Response struct {
