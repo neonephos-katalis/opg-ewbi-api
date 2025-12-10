@@ -305,12 +305,27 @@ const (
 	UPDATECODES UpdateFederationJSONBodyOperationType = "UPDATE_CODES"
 )
 
-// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-type AccessPointInfo = []struct {
-	AccessPoints ServiceEndpoint `json:"accessPoints"`
-
-	// InterfaceId Each Port and corresponding traffic protocol exposed by the component is identified by a name. Application client on user device requires this to uniquely identify the interface.
-	InterfaceId InterfaceId `json:"interfaceId"`
+type AppInstanceDetailsResponse struct {
+	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+	AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
+	// AppInstanceState Running status of the application instance.
+	AppInstanceState string `json:"appInstanceState,omitempty"`
+}
+type AccessPointInfo struct {
+	// InterfaceId Identifier of the interface via which the application instance can be accessed
+	InterfaceId string `json:"interfaceId"`
+	// AccessPoints List of access points via which the application instance can be accessed
+	AccessPoints []AccessPoints `json:"accessPoints"`
+}
+type AccessPoints struct {
+	// Port Port number via which the application instance can be accessed
+	Port int `json:"port"`
+	// Fqdn Fully Qualified Domain Name (FQDN) via which the application instance can be accessed
+	Fqdn string `json:"fqdn"`
+	// Ipv4Addresses IPv4 address list via which the application instance can be accessed
+	Ipv4Addresses []string `json:"ipAddress,omitempty"`
+	// Ipv6Addresses IPv6 address list via which the application instance can be accessed
+	Ipv6Addresses Ipv6Addr `json:"ipv6Address,omitempty"`
 }
 
 // AppComponentSpecs An application may consist of more than one component. Each component is associated with a descriptor and may exposes its services externally or internally. App providers are required to provide details about all these components, their associated descriptors and their DNS names.
@@ -595,8 +610,18 @@ type FederationResponseData struct {
 }
 
 type FileResponseData struct {
-	Phase string `json:"phase,omitempty"`
 	State string `json:"state,omitempty"`
+}
+type ArtefactResponseData struct {
+	State string `json:"state,omitempty"`
+}
+type ApplicationResponseData struct {
+	State string `json:"state,omitempty"`
+}
+type ApplicationInstanceResponseData struct {
+	State          string `json:"state,omitempty"`
+	ZoneIdentifier string `json:"zoneIdentifier,omitempty"`
+	AppInstanceId  string `json:"appInstanceId,omitempty"`
 }
 
 // FederationResponseDataPlatformCaps Home routing - Operator platform is capable of routing edge application data traffic from its edges to user device in their home location. This is the case where user devices are served in their home region (requesting platform region, non-roaming) but the corresponding edge application are in operator platform edges. Anchoring - Operator platform is capable of routing edge application traffic for roaming user devices to edge application in user device home network.

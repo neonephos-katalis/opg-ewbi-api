@@ -3,6 +3,7 @@ package metastore
 import (
 	"context"
 	"fmt"
+	"reflect"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -39,19 +40,27 @@ func (c *k8sClient) buildOwnerReferenceOption(federationContextID string) (Opt, 
 
 func (c *k8sClient) createK8sObject(object k8scli.Object) error {
 	ctx := context.TODO()
-	//Tenativo di creazione con retry per problemi di sincronizzazione con l'API server di k8s
+	// Attempt to create the object
 	if err := c.kubernetes.Create(context.TODO(), object, &k8scli.CreateOptions{}); err != nil {
 		if k8serrors.IsAlreadyExists(err) {
 			//return errors.Wrapf(ErrAlreadyExists, "%s", errDetails)
-			existing := object.DeepCopyObject().(k8scli.Object)
-			key := k8scli.ObjectKeyFromObject(object) // Costruiamo la chiave (Namespace + Name) dall'oggetto stesso
-			// Facciamo la GET. Poiché 'object' è un puntatore, verrà popolato con i dati aggiornati
+			existing := object.DeepCopyObject().(k8scli.Object) //Create a new instance to hold existing object
+			key := k8scli.ObjectKeyFromObject(object)           //Get the namespaced name key
+			//Retrieve existing object to get resource version for update
 			if getErr := c.kubernetes.Get(ctx, key, existing); getErr != nil {
 				return errors.Wrapf(getErr, "failed to get existing object")
 			}
-			object.SetResourceVersion(existing.GetResourceVersion())
-			object.SetUID(existing.GetUID()) // A volte necessario mantenere l'UID
-
+			// Check if specs are different
+			// if !specsAreDifferent(existing, object) {
+			// 	// No update needed
+			// 	if updateErr := c.kubernetes.Update(ctx, object); updateErr != nil {
+			// 		return errors.Wrapf(updateErr, "failed to update existing object")
+			// 	}
+			// 	return nil
+			// }
+			object.SetResourceVersion(existing.GetResourceVersion()) //Set resource version for update
+			object.SetUID(existing.GetUID())                         //Ensure UID is set to avoid issues during update
+			// Proceed to update the existing object
 			if updateErr := c.kubernetes.Update(ctx, object); updateErr != nil {
 				return errors.Wrapf(updateErr, "failed to update existing object")
 			}
@@ -62,6 +71,25 @@ func (c *k8sClient) createK8sObject(object k8scli.Object) error {
 		return errors.Wrapf(err, "%s", errDetails)
 	}
 	return nil
+}
+
+// Add a function to compare specs of two k8s objects
+func specsAreDifferent(existing, desired k8scli.Object) bool {
+	valExisting := reflect.ValueOf(existing)
+	valDesired := reflect.ValueOf(desired)
+	if valExisting.Kind() == reflect.Ptr {
+		valExisting = valExisting.Elem()
+	}
+	if valDesired.Kind() == reflect.Ptr {
+		valDesired = valDesired.Elem()
+	}
+	fieldExisting := valExisting.FieldByName("Spec")
+	fieldDesired := valDesired.FieldByName("Spec")
+	if !fieldExisting.IsValid() || !fieldDesired.IsValid() {
+		return true
+	}
+	// DeepEqual controlla se il contenuto è semanticamente uguale
+	return !reflect.DeepEqual(fieldExisting.Interface(), fieldDesired.Interface())
 }
 
 // getKubernetesCallbackObject retrieves a Kubernetes object by id and federation callback id.

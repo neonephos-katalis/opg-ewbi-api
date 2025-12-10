@@ -79,15 +79,26 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 			Detail: &detail,
 		})
 	}
-
-	if _, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
+	var obj *opgv1beta1.ApplicationInstance
+	var err error
+	if obj, _, err = h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
 		InstallAppJSONBody:  &request,
 		FederationContextID: federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-
-	return c.JSON(http.StatusAccepted, nil)
+	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
+		fmt.Printf("+++++++ Application Instance response:  Pending\n")
+		return c.JSON(http.StatusAccepted, models.ApplicationInstanceResponseData{
+			State: "Pending"})
+	}
+	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.State))
+	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.AppInstanceId))
+	return c.JSON(http.StatusOK, models.ApplicationInstanceResponseData{
+		State:          string(obj.Status.State),
+		ZoneIdentifier: string(request.ZoneInfo.ZoneId),
+		AppInstanceId:  string(obj.Status.AppInstanceId),
+	})
 }
 
 // Terminate an application instance on a partner OP zone.
@@ -106,8 +117,28 @@ func (h *handler) GetAppInstanceDetails(c echo.Context, federationContextId mode
 	if err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
+	fmt.Printf("	AppInstanceState: %s\n", appInst.GetAppInstanceDetails200JSONResponse.AppInstanceState)
+	details := appInst.GetAppInstanceDetails200JSONResponse.AccessPointInfo
+	fmt.Printf("+++++++ DETAILS:\n")
+	fmt.Printf("InterfaceId: %s\n", details.InterfaceId)
+	for _, ap := range details.AccessPoints {
+		fmt.Printf("Accesspoints:\n")
+		fmt.Printf("  Port: %d\n", ap.Port)
+		fmt.Printf("  FQDN: %s\n", ap.Fqdn)
+		fmt.Printf("  IPv4: %+v\n", ap.Ipv4Addresses)
+		fmt.Printf("  IPv6: %+v\n", ap.Ipv6Addresses)
+	}
 
-	return c.JSON(http.StatusOK, appInst.GetAppInstanceDetails200JSONResponse)
+	var accessPointList []models.AccessPointInfo
+	info := appInst.GetAppInstanceDetails200JSONResponse.AccessPointInfo
+	if info.InterfaceId != "" {
+		accessPointList = append(accessPointList, info)
+	}
+
+	return c.JSON(http.StatusOK, models.AppInstanceDetailsResponse{
+		AppInstanceState: appInst.GetAppInstanceDetails200JSONResponse.AppInstanceState,
+		AccessPointInfo:  accessPointList, // Passa la lista
+	})
 }
 
 // Submits an application details to a partner OP. Based on the details provided,  partner OP shall do bookkeeping, resource validation and other pre-deployment operations.
@@ -122,15 +153,26 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 			Detail: &detail,
 		})
 	}
-
-	if err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
+	var (
+		obj *opgv1beta1.Application
+		err error
+	)
+	if obj, err = h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
 		OnboardApplicationJSONBody: &request,
 		FederationContextId:        federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-
-	return c.JSON(http.StatusAccepted, nil)
+	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
+		fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
+		return c.JSON(http.StatusAccepted, models.ApplicationResponseData{
+			State: "Pending",
+		})
+	}
+	fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
+	return c.JSON(http.StatusOK, models.ApplicationResponseData{
+		State: string(obj.Status.State),
+	})
 }
 
 // Deboards the application from any zones, if any, and deletes the App.
@@ -174,15 +216,21 @@ func (h *handler) UploadArtefact(c echo.Context, federationContextId models.Fede
 			Detail: &detail,
 		})
 	}
-
-	if err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
+	var obj *opgv1beta1.Artefact
+	if obj, err = h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
 		UploadArtefactMultipartBody: request,
 		FederationContextId:         federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-
-	return c.JSON(http.StatusOK, nil)
+	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
+		fmt.Printf("+++++++ Artefact response:  Pending\n")
+		return c.JSON(http.StatusAccepted, models.ArtefactResponseData{
+			State: "Pending"})
+	}
+	fmt.Printf("+++++++ Artefact response: %+v\n", string(obj.Status.State))
+	return c.JSON(http.StatusOK, models.ArtefactResponseData{
+		State: string(obj.Status.State)})
 }
 
 // Removes an artefact from partner OP.
@@ -225,18 +273,16 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	var phase = obj.Status.Phase
-	var state = obj.Status.State
-	if strings.TrimSpace(string(state)) == "" {
-		phase = opgv1beta1.FilePhaseReady
-		state = "Pending"
+	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
+		fmt.Printf("+++++++ File response: %+v\n", string(obj.Status.State))
+		return c.JSON(http.StatusAccepted, models.FileResponseData{
+			State: "Pending",
+		})
 	}
-	var response = models.FileResponseData{
-		Phase: string(phase),
-		State: string(state),
-	}
-	fmt.Printf("+++++++File response: %+v\n", response)
-	return c.JSON(http.StatusOK, response)
+	fmt.Printf("+++++++ File response: %+v\n", string(obj.Status.State))
+	return c.JSON(http.StatusOK, models.FileResponseData{
+		State: string(obj.Status.State),
+	})
 }
 
 // Removes an image file from partner OP.

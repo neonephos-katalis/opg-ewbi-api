@@ -1739,11 +1739,29 @@ type InstallAppResponseObject interface {
 }
 
 type InstallApp202Response struct {
+	AppIdentifier string `json:"appInstanceId"`
+	ZoneId        string `json:"zoneId"`
+	State         string `json:"state"`
 }
 
 func (response InstallApp202Response) VisitInstallAppResponse(w http.ResponseWriter) error {
-	w.WriteHeader(202)
-	return nil
+	state := response.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
+	responsePayload := struct {
+		ZoneId        string `json:"zoneId"`
+		AppIdentifier string `json:"appInstanceId"`
+	}{
+		ZoneId:        response.ZoneId,
+		AppIdentifier: response.AppIdentifier,
+	}
+	return json.NewEncoder(w).Encode(responsePayload)
 }
 
 type InstallApp400ApplicationProblemPlusJSONResponse struct {
@@ -2099,10 +2117,9 @@ type GetAppInstanceDetailsResponseObject interface {
 
 type GetAppInstanceDetails200JSONResponse struct {
 	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccesspointInfo *AccessPointInfo `json:"accesspointInfo,omitempty"`
-
+	AccessPointInfo AccessPointInfo `json:"accessPointInfo,omitempty"`
 	// AppInstanceState Running status of the application instance.
-	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+	AppInstanceState string `json:"appInstanceState,omitempty"`
 }
 
 func (response GetAppInstanceDetails200JSONResponse) VisitGetAppInstanceDetailsResponse(w http.ResponseWriter) error {
@@ -2219,10 +2236,19 @@ type OnboardApplicationResponseObject interface {
 }
 
 type OnboardApplication202Response struct {
+	Body ApplicationResponseData
 }
 
 func (response OnboardApplication202Response) VisitOnboardApplicationResponse(w http.ResponseWriter) error {
-	w.WriteHeader(202)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
 	return nil
 }
 
@@ -3040,10 +3066,19 @@ type UploadArtefactResponseObject interface {
 }
 
 type UploadArtefact200Response struct {
+	Body ArtefactResponseData
 }
 
 func (response UploadArtefact200Response) VisitUploadArtefactResponse(w http.ResponseWriter) error {
-	w.WriteHeader(200)
+	state := response.Body.State
+	switch state {
+	case "", "Pending":
+		w.WriteHeader(202)
+	case "Ready":
+		w.WriteHeader(200)
+	default:
+		w.WriteHeader(202)
+	}
 	return nil
 }
 
@@ -3497,15 +3532,7 @@ type UploadFileResponseObject interface {
 }
 
 type UploadFile200Response struct {
-	Body    FileResponseData
-	Headers UploadFile200ResponseHeaders
-}
-
-// AGG
-type UploadFile200ResponseHeaders struct {
-	AcceptEncoding  string
-	ContentEncoding string
-	Location        string
+	Body FileResponseData
 }
 
 func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
@@ -3520,14 +3547,6 @@ func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWri
 	}
 	return nil
 }
-
-//type UploadFile200Response struct {
-//}
-
-//func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
-//	w.WriteHeader(200)
-//	return nil
-//}
 
 type UploadFile400ApplicationProblemPlusJSONResponse struct {
 	N400ApplicationProblemPlusJSONResponse
