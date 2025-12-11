@@ -2925,7 +2925,7 @@ func (r RemoveAppResponse) StatusCode() int {
 
 type AppInstanceDetailsJSON200Response struct {
 	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccesspointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
+	AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
 
 	// AppInstanceState Running status of the application instance.
 	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
