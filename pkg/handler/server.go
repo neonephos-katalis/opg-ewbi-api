@@ -13,6 +13,7 @@ import (
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/deployment"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/metastore"
+	"github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
@@ -87,15 +88,10 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		fmt.Printf("+++++++ Application Instance response:  Pending\n")
-		return c.JSON(http.StatusAccepted, models.ApplicationInstanceResponseData{
-			State: "Pending"})
-	}
 	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.State))
 	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.AppInstanceId))
 	return c.JSON(http.StatusOK, models.ApplicationInstanceResponseData{
-		State:          string(obj.Status.State),
+		State:          string(v1beta1.ApplicationInstanceStatePending),
 		ZoneIdentifier: string(request.ZoneInfo.ZoneId),
 		AppInstanceId:  string(obj.Status.AppInstanceId),
 	})

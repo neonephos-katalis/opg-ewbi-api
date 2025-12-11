@@ -1745,15 +1745,7 @@ type InstallApp202Response struct {
 }
 
 func (response InstallApp202Response) VisitInstallAppResponse(w http.ResponseWriter) error {
-	state := response.State
-	switch state {
-	case "", "Pending":
-		w.WriteHeader(202)
-	case "Ready":
-		w.WriteHeader(200)
-	default:
-		w.WriteHeader(202)
-	}
+	w.WriteHeader(202)
 	responsePayload := struct {
 		ZoneId        string `json:"zoneId"`
 		AppIdentifier string `json:"appInstanceId"`
