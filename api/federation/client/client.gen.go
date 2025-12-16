@@ -2826,7 +2826,6 @@ func (r ResourceReservationCallbackLinkResponse) StatusCode() int {
 type InstallAppResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ApplicationInstanceResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -2923,18 +2922,16 @@ func (r RemoveAppResponse) StatusCode() int {
 	return 0
 }
 
-type AppInstanceDetailsJSON200Response struct {
-	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
-
-	// AppInstanceState Running status of the application instance.
-	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
-}
-
 type GetAppInstanceDetailsResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	JSON200                   *AppInstanceDetailsJSON200Response
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+		AccesspointInfo *AccessPointInfo `json:"accesspointInfo,omitempty"`
+
+		// AppInstanceState Running status of the application instance.
+		AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+	}
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -2964,7 +2961,6 @@ func (r GetAppInstanceDetailsResponse) StatusCode() int {
 type OnboardApplicationResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ApplicationResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3187,7 +3183,6 @@ func (r LockUnlockApplicationZoneResponse) StatusCode() int {
 type UploadArtefactResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ArtefactResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3270,7 +3265,7 @@ type GetArtefactResponse struct {
 		ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 		// ArtefactVersionInfo Artefact version information
-		ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
+		ArtefactVersionInfo string               `json:"artefactVersionInfo"`
 		ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 		// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3335,7 +3330,6 @@ func (r GetCandidateZonesResponse) StatusCode() int {
 type UploadFileResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *FileResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -4718,12 +4712,6 @@ func ParseInstallAppResponse(rsp *http.Response) (*InstallAppResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		var dest ApplicationInstanceResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -4968,7 +4956,13 @@ func ParseGetAppInstanceDetailsResponse(rsp *http.Response) (*GetAppInstanceDeta
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AppInstanceDetailsJSON200Response
+		var dest struct {
+			// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+			AccesspointInfo *AccessPointInfo `json:"accesspointInfo,omitempty"`
+
+			// AppInstanceState Running status of the application instance.
+			AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -5049,12 +5043,6 @@ func ParseOnboardApplicationResponse(rsp *http.Response) (*OnboardApplicationRes
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		var dest ApplicationResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -5305,8 +5293,6 @@ func ParseUpdateApplicationResponse(rsp *http.Response) (*UpdateApplicationRespo
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		return nil, nil
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -5607,9 +5593,6 @@ func ParseUploadArtefactResponse(rsp *http.Response) (*UploadArtefactResponse, e
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		return response, nil
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -5785,7 +5768,7 @@ func ParseGetArtefactResponse(rsp *http.Response) (*GetArtefactResponse, error) 
 			ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 			// ArtefactVersionInfo Artefact version information
-			ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
+			ArtefactVersionInfo string               `json:"artefactVersionInfo"`
 			ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 			// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -5935,13 +5918,6 @@ func ParseUploadFileResponse(rsp *http.Response) (*UploadFileResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		var dest FileResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
