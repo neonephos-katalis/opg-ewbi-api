@@ -2,12 +2,12 @@ version: "3.8"
 
 secrets:
   netrc:
-    #file: /Users/${USER}/.netrc # For Mac
-    file: /home/${USER}/.netrc
+    file: /Users/${USER}/.netrc # For Mac
+    #file: /home/${USER}/.netrc
 
 services:
   federation:
-    image: ghcr.io/neonephos-katalis/opg-ewbi-api-arm64:v1.0.0
+    image: ghcr.io/neonephos-katalis/opg-ewbi-api-arm64:v0.0.1
     build:
       context: ./
       dockerfile: Dockerfile

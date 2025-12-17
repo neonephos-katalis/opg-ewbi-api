@@ -90,6 +90,13 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 	}
 	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.State))
 	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.AppInstanceId))
+	if obj.Status.State == "" && obj.Status.AppInstanceId == "" {
+		return c.JSON(http.StatusAccepted, models.ApplicationInstanceResponseData{
+			State:          string(v1beta1.ApplicationInstanceStatePending),
+			ZoneIdentifier: string(request.ZoneInfo.ZoneId),
+			AppInstanceId:  "",
+		})
+	}
 	return c.JSON(http.StatusOK, models.ApplicationInstanceResponseData{
 		State:          string(v1beta1.ApplicationInstanceStatePending),
 		ZoneIdentifier: string(request.ZoneInfo.ZoneId),
