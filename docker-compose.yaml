@@ -7,7 +7,7 @@ secrets:
 
 services:
   federation:
-    image: ghcr.io/neonephos-katalis/opg-ewbi-api-amd64:v1.0.0
+    image: ghcr.io/neonephos-katalis/opg-ewbi-api-arm64:v1.0.0
     build:
       context: ./
       dockerfile: Dockerfile
@@ -16,8 +16,8 @@ services:
     env_file:
       - .env
     restart: on-failure
-    #platform: linux/arm64
-    platform: linux/amd64
+    platform: linux/arm64
+    #platform: linux/amd64
     ports:
       - "8080:8080"
 
@@ -25,16 +25,16 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.apigen
-    #platform: linux/arm64
-    platform: linux/amd64
+    platform: linux/arm64
+    #platform: linux/amd64
     volumes:
       - ./api:/api
 
   swagger:
     image: swaggerapi/swagger-ui
     container_name: swagger_ui
-    #platform: linux/arm64
-    platform: linux/amd64
+    platform: linux/arm64
+    #platform: linux/amd64
     ports:
       - "8082:8080"
     volumes:
