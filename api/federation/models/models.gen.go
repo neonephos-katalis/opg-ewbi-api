@@ -325,7 +325,7 @@ type AccessPoints struct {
 	// Ipv4Addresses IPv4 address list via which the application instance can be accessed
 	Ipv4Addresses []string `json:"ipAddress,omitempty"`
 	// Ipv6Addresses IPv6 address list via which the application instance can be accessed
-	Ipv6Addresses Ipv6Addr `json:"ipv6Address,omitempty"`
+	Ipv6Addresses []string `json:"ipv6Address,omitempty"`
 }
 
 // AppComponentSpecs An application may consist of more than one component. Each component is associated with a descriptor and may exposes its services externally or internally. App providers are required to provide details about all these components, their associated descriptors and their DNS names.
