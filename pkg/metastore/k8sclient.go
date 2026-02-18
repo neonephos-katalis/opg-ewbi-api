@@ -271,7 +271,7 @@ func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federat
 		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if updates.AppInstanceInfo.AppInstanceState != nil {
-		state := strcase.ToCamel(string(*updates.AppInstanceInfo.AppInstanceState))
+		state := string(*updates.AppInstanceInfo.AppInstanceState)
 		if isValidApplicationInstanceStatus(state) {
 			return c.updateK8sObjectStatus(res, state)
 		}
@@ -290,7 +290,7 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 		return missMatchErr("application", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if len(updates.StatusInfo) > 0 {
-		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
+		state := string(updates.StatusInfo[0].OnboardStatusInfo)
 		if isValidApplicationStatus(state) {
 			return c.updateK8sObjectStatus(res, state)
 		}
