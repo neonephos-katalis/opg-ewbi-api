@@ -3831,8 +3831,11 @@ func (c *ClientWithResponses) AppInstCallbackLinkWithBodyWithResponse(ctx contex
 }
 
 func (c *ClientWithResponses) AppInstCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body AppInstCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*AppInstCallbackLinkResponse, error) {
+	fmt.Println("------------------------------AppInstCallbackLinkWithResponse ------------------------------------------------------------")
 	rsp, err := c.AppInstCallbackLink(ctx, federationCallbackId, body, reqEditors...)
+	fmt.Println("------------------------------ --------------------------------------------RESP")
 	if err != nil {
+		fmt.Println("\terror AppInstCallbackLinkWithResponse", err)
 		return nil, err
 	}
 	return ParseAppInstCallbackLinkResponse(rsp)
