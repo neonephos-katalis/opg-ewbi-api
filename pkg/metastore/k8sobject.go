@@ -2,6 +2,7 @@ package metastore
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 
@@ -14,6 +15,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	k8scli "sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
@@ -149,6 +151,26 @@ func (c *k8sClient) searchKubernetesObjects(objectList k8scli.ObjectList, search
 
 func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 	if err := c.kubernetes.Update(context.TODO(), object, &k8scli.UpdateOptions{}); err != nil {
+		return errors.Wrapf(err, "unable to update object %T", object)
+	}
+	return nil
+}
+
+func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates models.AppInstCallbackLinkJSONRequestBody) (err error) {
+	var ap []byte
+
+	if ap, err = json.Marshall(updates.AppInstanceInfo.accessPointInfo); err != nil {
+		return err
+	}
+
+	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s","accessPointInfo":%s}}`, string(updates.AppInstanceInfo.AppInstanceState), ap))
+
+	if err := c.kubernetes.Status().Patch(
+		context.TODO(),
+		object,
+		k8scli.RawPatch(k8scli.Merge.Type(), patch),
+		&k8scli.SubResourcePatchOptions{},
+	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
 	}
 	return nil

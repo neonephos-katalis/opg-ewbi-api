@@ -271,9 +271,8 @@ func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federat
 		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if updates.AppInstanceInfo.AppInstanceState != nil {
-		state := string(*updates.AppInstanceInfo.AppInstanceState)
-		if isValidApplicationInstanceStatus(state) {
-			return c.updateK8sObjectStatus(res, state)
+		if isValidApplicationInstanceStatus(string(*updates.AppInstanceInfo.AppInstanceState)) {
+			return c.updateK8sObjectAppInstStatus(res, updates)
 		}
 	}
 	return nil
