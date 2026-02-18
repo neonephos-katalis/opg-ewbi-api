@@ -13,6 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	k8scli "sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -195,17 +196,16 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *
 			},
 		},
 	}
-
-	patch, err := json.Marshal(patchMap)
+	patchBytes, err := json.Marshal(patchMap)
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal patch")
 	}
-
+	patchData := k8scli.RawPatch(types.MergePatchType, patchBytes)
 	// 4. Esecuzione del Patch
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
 		object,
-		k8scli.RawPatch(k8scli.Merge.Type(), patch),
+		patchData,
 		&k8scli.SubResourcePatchOptions{},
 	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
@@ -215,7 +215,7 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *
 }
 
 func (c *k8sClient) updateK8sObjectStatus(object k8scli.Object, status string) error {
-	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s"}}`, status)) // JSON Patch
+	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s"}}`, status))
 
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
