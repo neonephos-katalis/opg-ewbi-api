@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strconv"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -156,15 +157,51 @@ func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 	return nil
 }
 
-func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates models.AppInstCallbackLinkJSONRequestBody) (err error) {
-	var ap []byte
-	state := updates.AppInstanceInfo.AppInstanceState
-	if ap, err = json.Marshall(updates.AppInstanceInfo.accessPointInfo); err != nil {
-		return err
+func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
+	info := updates.AppInstanceInfo
+
+	// Gestione sicura dello stato
+	var stateStr string
+	if info.AppInstanceState != nil {
+		stateStr = string(*info.AppInstanceState)
 	}
 
-	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s","accessPointInfo":%s}}`, string(*state), ap))
+	// 2. Costruzione sicura dei punti di accesso
+	var accessPoints []map[string]interface{}
+	if info.AccesspointInfo != nil {
+		for _, ap := range info.AccesspointInfo.AccessPoints {
+			accessPoints = append(accessPoints, map[string]interface{}{
+				"port":          strconv.Itoa(ap.Port),
+				"fqdn":          ap.Fqdn,
+				"ipv4Addresses": ap.Ipv4Addresses,
+				"ipv6Addreses":  ap.Ipv6Addresses,
+			})
+		}
+	}
 
+	// 3. Costruzione dell'oggetto finale per il Patch
+	// Usiamo una map per garantire che il JSON sia formattato correttamente
+	interfaceId := ""
+	if info.AccesspointInfo != nil {
+		interfaceId = info.AccesspointInfo.InterfaceId
+	}
+
+	patchMap := map[string]interface{}{
+		"state": stateStr,
+		"accessPointInfo": []map[string]interface{}{
+			{
+				"interfaceId":  interfaceId,
+				"accessPoints": accessPoints,
+			},
+		},
+	}
+
+	patch, err := json.Marshal(patchMap)
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal patch")
+	}
+
+	// 4. Esecuzione del Patch
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
 		object,
@@ -173,6 +210,7 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates m
 	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
 	}
+
 	return nil
 }
 
