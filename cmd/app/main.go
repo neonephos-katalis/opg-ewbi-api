@@ -69,7 +69,7 @@ func main() {
 		},
 	}))
 	// Validate request and return errors using the expected models.ProblemDetails format
-	e.Use(server.Validator())
+	// e.Use(server.Validator())
 
 	scheme := runtime.NewScheme()
 	utilruntime.Must(opgv1beta1.AddToScheme(scheme))
