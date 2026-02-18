@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"strconv"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -175,7 +174,7 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *
 		interfaceId = info.AccesspointInfo.InterfaceId
 		for _, ap := range info.AccesspointInfo.AccessPoints {
 			accessPoints = append(accessPoints, map[string]interface{}{
-				"port":          strconv.Itoa(ap.Port),
+				"port":          ap.Port,
 				"fqdn":          ap.Fqdn,
 				"ipv4Addresses": ap.Ipv4Addresses,
 				"ipv6Addreses":  ap.Ipv6Addresses,
