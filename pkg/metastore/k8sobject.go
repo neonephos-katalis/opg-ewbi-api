@@ -158,12 +158,12 @@ func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 
 func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates models.AppInstCallbackLinkJSONRequestBody) (err error) {
 	var ap []byte
-
+	state := updates.AppInstanceInfo.AppInstanceState
 	if ap, err = json.Marshall(updates.AppInstanceInfo.accessPointInfo); err != nil {
 		return err
 	}
 
-	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s","accessPointInfo":%s}}`, string(updates.AppInstanceInfo.AppInstanceState), ap))
+	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s","accessPointInfo":%s}}`, string(*state), ap))
 
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
