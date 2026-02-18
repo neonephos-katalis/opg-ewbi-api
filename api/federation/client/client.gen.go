@@ -914,6 +914,7 @@ func NewAppInstCallbackLinkRequestWithBody(server string, federationCallbackId F
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
+	fmt.Println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ COMPLETE CALLBACK URL", queryURL.String())
 	if err != nil {
 		return nil, err
 	}
