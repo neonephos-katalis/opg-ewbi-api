@@ -2,7 +2,6 @@ package metastore
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -13,7 +12,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	k8scli "sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -161,15 +159,8 @@ func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
 	info := updates.AppInstanceInfo
 
-	// Gestione sicura dello stato
-	var stateStr string
-	if info.AppInstanceState != nil {
-		stateStr = string(*info.AppInstanceState)
-	}
-
-	// 2. Costruzione sicura dei punti di accesso
 	var accessPoints []map[string]interface{}
-	if info.AccesspointInfo != nil {
+	if info.AccesspointInfo != nil { //
 		for _, ap := range info.AccesspointInfo.AccessPoints {
 			accessPoints = append(accessPoints, map[string]interface{}{
 				"port":          strconv.Itoa(ap.Port),
@@ -181,31 +172,17 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *
 	}
 
 	// 3. Costruzione dell'oggetto finale per il Patch
-	// Usiamo una map per garantire che il JSON sia formattato correttamente
 	interfaceId := ""
 	if info.AccesspointInfo != nil {
 		interfaceId = info.AccesspointInfo.InterfaceId
 	}
 
-	patchMap := map[string]interface{}{
-		"state": stateStr,
-		"accessPointInfo": []map[string]interface{}{
-			{
-				"interfaceId":  interfaceId,
-				"accessPoints": accessPoints,
-			},
-		},
-	}
-	patchBytes, err := json.Marshal(patchMap)
-	if err != nil {
-		return errors.Wrap(err, "failed to marshal patch")
-	}
-	patchData := k8scli.RawPatch(types.MergePatchType, patchBytes)
+	patch := []byte(fmt.Sprintf(`{"status":{"state":"%s","accessPointInfo":[{"interfaceId":"%s","accessPoints":%v}]}}`, string(*info.AppInstanceState), interfaceId, accessPoints))
 	// 4. Esecuzione del Patch
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
 		object,
-		patchData,
+		k8scli.RawPatch(k8scli.Merge.Type(), patch),
 		&k8scli.SubResourcePatchOptions{},
 	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
