@@ -111,10 +111,10 @@ const (
 
 // Defines values for InstanceState.
 const (
-	InstanceStateFAILED      InstanceState = "FAILED"
-	InstanceStatePENDING     InstanceState = "PENDING"
-	InstanceStateREADY       InstanceState = "READY"
-	InstanceStateTERMINATING InstanceState = "TERMINATING"
+	InstanceStateFAILED      InstanceState = "Failed"
+	InstanceStatePENDING     InstanceState = "Pending"
+	InstanceStateREADY       InstanceState = "Ready"
+	InstanceStateTERMINATING InstanceState = "Terminating"
 )
 
 // Defines values for InterfaceDetailsCommProtocol.
@@ -202,11 +202,11 @@ const (
 
 // Defines values for AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo.
 const (
-	DEBOARDING AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "DEBOARDING"
-	FAILED     AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "FAILED"
-	ONBOARDED  AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "ONBOARDED"
-	PENDING    AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "PENDING"
-	REMOVED    AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "REMOVED"
+	DEBOARDING AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "Deboarding"
+	FAILED     AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "Failed"
+	ONBOARDED  AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "Onboarded"
+	PENDING    AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "Pending"
+	REMOVED    AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo = "Removed"
 )
 
 // Defines values for PartnerStatusLinkJSONBodyObjectType.
