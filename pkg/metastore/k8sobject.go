@@ -159,6 +159,7 @@ func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 
 func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
 	info := updates.AppInstanceInfo
+	fmt.Println("==================================================[ TEST ]")
 
 	var patch struct {
 		accessPointInfo []models.AccessPoints `json:"accessPointInfo,omitempty"`
