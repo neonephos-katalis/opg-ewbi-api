@@ -160,48 +160,23 @@ func (c *k8sClient) updateK8sObject(object k8scli.Object) error {
 func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
 	info := updates.AppInstanceInfo
 
-	// 1. Gestione sicura dello stato
-	var stateStr string
+	var patch struct {
+		accessPointInfo []models.AccessPoints `json:"accessPointInfo,omitempty"`
+		state           models.InstanceState  `json:"state,omitempty"`
+	}
+
 	if info.AppInstanceState != nil {
-		stateStr = string(*info.AppInstanceState)
+		patch.state = *info.AppInstanceState
 	}
-
-	// 2. Costruzione sicura dei punti di accesso
-	var accessPoints []map[string]interface{}
-	interfaceId := ""
-
 	if info.AccesspointInfo != nil {
-		interfaceId = info.AccesspointInfo.InterfaceId
-		for _, ap := range info.AccesspointInfo.AccessPoints {
-			accessPoints = append(accessPoints, map[string]interface{}{
-				"port":          ap.Port,
-				"fqdn":          ap.Fqdn,
-				"ipv4Addresses": ap.Ipv4Addresses,
-				"ipv6Addreses":  ap.Ipv6Addresses,
-			})
-		}
+		patch.accessPointInfo = info.AccesspointInfo.AccessPoints
 	}
 
-	// 3. Costruzione della struttura per il Patch (MOLTO PIÙ SICURO)
-	patchMap := map[string]interface{}{
-		"status": map[string]interface{}{
-			"state": stateStr,
-			"accessPointInfo": []map[string]interface{}{
-				{
-					"interfaceId":  interfaceId,
-					"accessPoints": accessPoints,
-				},
-			},
-		},
-	}
-
-	// Serializzazione corretta in JSON []byte
-	patchBytes, err := json.Marshal(patchMap)
+	patchBytes, err := json.Marshal(map[string]any{"status": patch})
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal status patch")
 	}
 
-	// 4. Esecuzione del Patch
 	if err := c.kubernetes.Status().Patch(
 		context.TODO(),
 		object,
