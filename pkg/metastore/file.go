@@ -97,6 +97,14 @@ func (m *UploadFile) k8sCustomResource(namespace string, opts ...Opt) (*opgv1bet
 	return obj, nil
 }
 
+func isValidFileStatus(status string) bool {
+	switch status {
+	case "Pending", "Uploaded", "Failed", "Removing", "Removed":
+		return true
+	}
+	return false
+}
+
 func k8sCustomResourceNameFromFileID(federationContextID, fileID string) string {
 	return fmt.Sprintf("%s-%s", fileKind, uuidV5Fn(federationContextID+"/"+fileID))
 }

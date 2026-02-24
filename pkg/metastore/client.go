@@ -21,6 +21,7 @@ type Client interface {
 	GetFile(ctx context.Context, federationContextID, id string) (*File, error)
 
 	UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error)
+	UpdateFileStatus(ctx context.Context, federationCallbackID string, updates *models.FileStatusCallbackLinkJSONRequestBody) error
 	RemoveFile(ctx context.Context, federationContextID, id string) error
 
 	GetArtefact(ctx context.Context, federationContextID, id string) (*Artefact, error)

@@ -297,6 +297,23 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 	return nil
 }
 
+func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID string, updates *models.FileStatusCallbackLinkJSONRequestBody) error {
+	id := updates.FileId
+	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.FileList{}, federationCallbackID)
+	if err != nil {
+		return err
+	}
+	res, ok := obj.(*opgv1beta1.File)
+	if !ok {
+		return missMatchErr("file", id, federationCallbackID, &opgv1beta1.File{}, obj)
+	}
+	state := updates.UploadStatusInfo
+	if isValidFileStatus(state) {
+		return c.updateK8sObjectStatus(res, state)
+	}
+	return nil
+}
+
 func (c *k8sClient) UpdateFederationStatus(ctx context.Context, federationCallbackID string, status models.Status) error {
 	obj, err := c.searchKubernetesObject(&opgv1beta1.FederationList{}, labels.Set{
 		opgLabel(federationCallbackIDLabel): federationCallbackID,
