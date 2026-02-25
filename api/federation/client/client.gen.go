@@ -966,10 +966,13 @@ func NewAppStatusCallbackLinkRequestWithBody(server string, federationCallbackId
 		return nil, err
 	}
 
+	fmt.Println("######################## SENDING APPLICATION CALLBACK REQUEST TO", queryURL.String())
+
 	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("######################## APPLICATION CALLBACK REQUEST BODY", req.Body)
 
 	req.Header.Add("Content-Type", contentType)
 
