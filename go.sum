@@ -107,8 +107,8 @@ github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 h1:RWengNIwukTxcDr9
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826/go.mod h1:TaXosZuwdSHYgviHp1DAtfrULt5eUgsSMsZf+YrPgl8=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/neonephos-katalis/opg-ewbi-operator v0.0.2 h1:7MXERIRw1o7oMbnhvql0Ldg3ZXOS/Bi8Rd42IEstusY=
-github.com/neonephos-katalis/opg-ewbi-operator v0.0.2/go.mod h1:OVJjkJE9/F58pdhBLgW7t/C2S63mGGzd9Pz3xjHbI/w=
+github.com/neonephos-katalis/opg-ewbi-operator v1.0.2 h1:C2/HYIFy/JJV4LS19PKUlggp34x3Oa7k3rPKybG/XCM=
+github.com/neonephos-katalis/opg-ewbi-operator v1.0.2/go.mod h1:u4IhE9gQObseny8+y58U9EEgEwcYc4Y6Yk/z92VNIMs=
 github.com/oapi-codegen/runtime v1.1.1 h1:EXLHh0DXIJnWhdRPN2w4MXAzFyE4CskzhNLUmtpMYro=
 github.com/oapi-codegen/runtime v1.1.1/go.mod h1:SK9X900oXmPWilYR5/WKPzt3Kqxn/uS/+lbpREv+eCg=
 github.com/onsi/ginkgo/v2 v2.21.0 h1:7rg/4f3rB88pb5obDgNZrNHrQ4e6WpjonchcpuBRnZM=

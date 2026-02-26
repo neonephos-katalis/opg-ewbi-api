@@ -24,21 +24,25 @@ func NewK8sClient(c k8scli.Client, namespace string) *k8sClient {
 	return &k8sClient{c, namespace}
 }
 
-func (c *k8sClient) AddApplicationInstance(ctx context.Context, dep *ApplicationInstance) error {
+func (c *k8sClient) AddApplicationInstance(ctx context.Context, dep *ApplicationInstance) (*opgv1beta1.ApplicationInstance, error) {
 	if _, err := c.GetApplication(ctx, dep.FederationContextId, dep.AppId); err != nil {
 		if IsNotFoundError(err) {
-			return errors.Wrap(ErrBadRequest, err.Error())
+			return nil, errors.Wrap(ErrBadRequest, err.Error())
 		}
 	}
 	opt, err := c.buildOwnerReferenceOption(dep.FederationContextId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	obj, err := dep.k8sCustomResource(c.getNamespace(), opt)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return c.createK8sObject(obj)
+	err = c.createK8sObject(obj)
+	if err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
 
 func (c *k8sClient) getFederation(federationContextID string) (*opgv1beta1.Federation, error) {
@@ -170,23 +174,27 @@ func (c *k8sClient) ListAvailabilityZones(ctx context.Context) ([]*PartnerAvaila
 	return pazs, nil
 }
 
-func (c *k8sClient) OnboardApplication(ctx context.Context, app *OnboardApplication) error {
+func (c *k8sClient) OnboardApplication(ctx context.Context, app *OnboardApplication) (*opgv1beta1.Application, error) {
 	for _, artefact := range app.artefacts() {
 		if _, err := c.GetArtefact(ctx, app.FederationContextId, artefact); err != nil {
 			if IsNotFoundError(err) {
-				return errors.Wrap(ErrBadRequest, err.Error())
+				return nil, errors.Wrap(ErrBadRequest, err.Error())
 			}
 		}
 	}
 	opt, err := c.buildOwnerReferenceOption(app.FederationContextId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	obj, err := app.k8sCustomResource(c.getNamespace(), opt)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return c.createK8sObject(obj)
+	err = c.createK8sObject(obj)
+	if err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
 
 func (c *k8sClient) RemoveApplication(ctx context.Context, federationContextID, id string) error {
@@ -310,35 +318,43 @@ func (c *k8sClient) UpdateFederationStatus(ctx context.Context, federationCallba
 	return nil
 }
 
-func (c *k8sClient) UploadArtefact(ctx context.Context, artefact *UploadArtefact) error {
+func (c *k8sClient) UploadArtefact(ctx context.Context, artefact *UploadArtefact) (*opgv1beta1.Artefact, error) {
 	for _, file := range artefact.files() {
 		if _, err := c.GetFile(ctx, artefact.FederationContextId, file); err != nil {
 			if IsNotFoundError(err) {
-				return errors.Wrap(ErrBadRequest, err.Error())
+				return nil, errors.Wrap(ErrBadRequest, err.Error())
 			}
 		}
 	}
 	opt, err := c.buildOwnerReferenceOption(artefact.FederationContextId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	obj, err := artefact.k8sCustomResource(c.getNamespace(), opt)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return c.createK8sObject(obj)
+	err = c.createK8sObject(obj)
+	if err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
 
-func (c *k8sClient) UploadFile(ctx context.Context, file *UploadFile) error {
-	opt, err := c.buildOwnerReferenceOption(file.FederationContextId)
+func (c *k8sClient) UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error) {
+	opt, err := c.buildOwnerReferenceOption(file.FederationContextId) //Serve a legare la nuova risorsa a una risorsa genitore
 	if err != nil {
-		return err
+		return nil, err
 	}
 	obj, err := file.k8sCustomResource(c.getNamespace(), opt)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return c.createK8sObject(obj)
+	err = c.createK8sObject(obj)
+	if err != nil {
+		return nil, err
+	}
+	return obj, nil
 }
 
 func (c *k8sClient) getNamespace() string {
@@ -347,4 +363,17 @@ func (c *k8sClient) getNamespace() string {
 
 func (c *k8sClient) getScheme() *runtime.Scheme {
 	return c.kubernetes.Scheme()
+}
+
+func (c *k8sClient) GetApplicationInstanceDetails(ctx context.Context, federationContextID, id string) (*ApplicationInstanceDetails, error) {
+	//return nil, errors.Errorf("method not implemented")
+	application, err := c.getKubernetesObject(id, &opgv1beta1.ApplicationInstanceList{}, federationContextID)
+	if err != nil {
+		return nil, err
+	}
+	res, ok := application.(*opgv1beta1.ApplicationInstance)
+	if !ok {
+		return nil, missMatchErr("application instance", id, federationContextID, &opgv1beta1.ApplicationInstance{}, application)
+	}
+	return applicationInstanceFromK8sCustomResource(id, *res)
 }
