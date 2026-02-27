@@ -166,16 +166,14 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
-		return c.JSON(http.StatusAccepted, models.ApplicationResponseData{
-			State: "Pending",
-		})
-	}
+
 	fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
-	return c.JSON(http.StatusOK, models.ApplicationResponseData{
-		State: string(obj.Status.State),
-	})
+	if state := strings.TrimSpace(string(obj.Status.State)); state == "" || state == "Pending" {
+		err = c.JSON(http.StatusAccepted, models.ApplicationResponseData{State: "Pending"})
+	} else {
+		err = c.JSON(http.StatusOK, models.ApplicationResponseData{State: state})
+	}
+	return err
 }
 
 // Deboards the application from any zones, if any, and deletes the App.
