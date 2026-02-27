@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -33,6 +34,7 @@ func (h *handler) AppStatusCallbackLink(c echo.Context, federationCallbackId mod
 	if err != nil {
 		return sendErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
+	fmt.Println("############################ HANDLING APPLICATION CALLBACK", *request)
 
 	if err := h.metaStoreClient.UpdateApplicationStatus(ctx, federationCallbackId, request); err != nil {
 		return sendErrorResponseFromError(c, err)
