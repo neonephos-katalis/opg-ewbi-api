@@ -2,6 +2,7 @@ package metastore
 
 import (
 	"context"
+	"log"
 
 	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
@@ -271,9 +272,12 @@ func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federat
 		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if updates.AppInstanceInfo.AppInstanceState != nil {
-		if isValidApplicationInstanceStatus(string(*updates.AppInstanceInfo.AppInstanceState)) {
-			return c.updateK8sObjectAppInstStatus(res, updates)
+		if state := string(*updates.AppInstanceInfo.AppInstanceState); !isValidApplicationInstanceStatus(state) {
+			log.Println("Invalid given state", state, "on UpdateApplicationStatus")
 		}
+		return c.updateK8sObjectAppInstStatus(res, updates)
+	} else {
+		log.Println("Unable to update status, no state given")
 	}
 	return nil
 }
@@ -290,9 +294,12 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 	}
 	if len(updates.StatusInfo) > 0 {
 		state := string(updates.StatusInfo[0].OnboardStatusInfo)
-		if isValidApplicationStatus(state) {
-			return c.updateK8sObjectStatus(res, state)
+		if !isValidApplicationStatus(state) {
+			log.Println("Invalid given state", state, "on UpdateApplicationStatus")
 		}
+		return c.updateK8sObjectStatus(res, state)
+	} else {
+		log.Println("Unable to update status, no state given")
 	}
 	return nil
 }
