@@ -162,15 +162,15 @@ func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *
 	fmt.Println("==================================================[ TEST ]")
 
 	var patch struct {
-		AccessPointInfo []models.AccessPoints `json:"accessPointInfo,omitempty"`
-		State           models.InstanceState  `json:"state,omitempty"`
+		AccessPointInfo models.AccessPointInfo `json:"accessPointInfo,omitempty"`
+		State           models.InstanceState   `json:"state,omitempty"`
 	}
 
 	if info.AppInstanceState != nil {
 		patch.State = *info.AppInstanceState
 	}
 	if info.AccesspointInfo != nil {
-		patch.AccessPointInfo = info.AccesspointInfo.AccessPoints
+		patch.AccessPointInfo = *info.AccesspointInfo
 	}
 
 	patchBytes, err := json.Marshal(map[string]any{"status": patch})
