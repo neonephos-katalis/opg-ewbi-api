@@ -321,6 +321,23 @@ func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID s
 	return nil
 }
 
+func (c *k8sClient) UpdateArtefactStatus(ctx context.Context, federationCallbackID string, updates *models.ArtefactStatusCallbackLinkJSONRequestBody) error {
+	id := updates.ArtefactId
+	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.ArtefactList{}, federationCallbackID)
+	if err != nil {
+		return err
+	}
+	res, ok := obj.(*opgv1beta1.Artefact)
+	if !ok {
+		return missMatchErr("artefact", id, federationCallbackID, &opgv1beta1.Artefact{}, obj)
+	}
+	state := updates.UploadStatusInfo
+	if isValidArtefactStatus(state) {
+		return c.updateK8sObjectStatus(res, state)
+	}
+	return nil
+}
+
 func (c *k8sClient) UpdateFederationStatus(ctx context.Context, federationCallbackID string, status models.Status) error {
 	obj, err := c.searchKubernetesObject(&opgv1beta1.FederationList{}, labels.Set{
 		opgLabel(federationCallbackIDLabel): federationCallbackID,

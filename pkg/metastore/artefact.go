@@ -103,6 +103,14 @@ func k8sCustomResourceNameFromArtefactID(federationContextID, artefactID string)
 	return fmt.Sprintf("%s-%s", artefactKind, uuidV5Fn(federationContextID+"/"+artefactID))
 }
 
+func isValidArtefactStatus(status string) bool {
+	switch status {
+	case "Pending", "Uploaded", "Failed", "Removing", "Removed":
+		return true
+	}
+	return false
+}
+
 func artefactFromK8sCustomResource(artefact opgv1beta1.Artefact) (*Artefact, error) {
 	componentSpec := make([]models.ComponentSpec, len(artefact.Spec.ComponentSpec))
 	for i, cs := range artefact.Spec.ComponentSpec {

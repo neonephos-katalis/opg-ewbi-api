@@ -58,6 +58,22 @@ func (h *handler) FileStatusCallbackLink(c echo.Context, federationCallbackId mo
 	return c.JSON(http.StatusNoContent, nil)
 }
 
+// Notification payload.
+// (POST /{federationCallbackId}/artefactStatusCallbackLink)
+func (h *handler) ArtefactStatusCallbackLink(c echo.Context, federationCallbackId models.FederationCallbackId) error {
+	ctx := h.getRequestContextFunc(c)
+
+	request, err := bindRequest[models.ArtefactStatusCallbackLinkJSONRequestBody](c)
+	if err != nil {
+		return sendErrorResponse(c, http.StatusBadRequest, err.Error())
+	}
+
+	if err := h.metaStoreClient.UpdateArtefactStatus(ctx, federationCallbackId, request); err != nil {
+		return sendErrorResponseFromError(c, err)
+	}
+	return c.JSON(http.StatusNoContent, nil)
+}
+
 // Notification about resource availability.
 // (POST /{federationCallbackId}/availZoneNotifLink)
 func (h *handler) AvailZoneNotifLink(c echo.Context, federationCallbackId models.FederationCallbackId) error {

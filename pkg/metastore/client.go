@@ -26,6 +26,7 @@ type Client interface {
 
 	GetArtefact(ctx context.Context, federationContextID, id string) (*Artefact, error)
 	UploadArtefact(ctx context.Context, artefact *UploadArtefact) (*opgv1beta1.Artefact, error)
+	UpdateArtefactStatus(ctx context.Context, federationCallbackID string, updates *models.ArtefactStatusCallbackLinkJSONRequestBody) error
 	RemoveArtefact(ctx context.Context, federationContextID, id string) error
 
 	GetApplication(ctx context.Context, federationContextID, id string) (*Application, error)

@@ -1019,6 +1019,13 @@ type FileStatusCallbackLinkJSONBody struct {
 	UploadStatusInfo    string              `json:"uploadStatusInfo"`
 }
 
+// ArtefactStatusCallbackLinkJSONBody defines parameters for ArtefactStatusCallbackLink.
+type ArtefactStatusCallbackLinkJSONBody struct {
+	FederationContextId FederationContextId `json:"federationContextId"`
+	ArtefactId          ArtefactId          `json:"artefactId"`
+	UploadStatusInfo    string              `json:"uploadStatusInfo"`
+}
+
 // AvailZoneNotifLinkJSONBody defines parameters for AvailZoneNotifLink.
 type AvailZoneNotifLinkJSONBody struct {
 	// FederationContextId This identifier shall be provided by the partner OP on successful verification and validation of the federation create request and is used by partner op to identify this newly created federation context. Originating OP shall provide this identifier in any subsequent request towards the partner op.
@@ -1421,6 +1428,9 @@ type AppStatusCallbackLinkJSONRequestBody AppStatusCallbackLinkJSONBody
 
 // FileStatusCallbackLinkJSONRequestBody defines body for FileStatusCallbackLink for application/json ContentType.
 type FileStatusCallbackLinkJSONRequestBody FileStatusCallbackLinkJSONBody
+
+// ArtefactStatusCallbackLinkJSONRequestBody defines body for ArtefactStatusCallbackLink for application/json ContentType.
+type ArtefactStatusCallbackLinkJSONRequestBody ArtefactStatusCallbackLinkJSONBody
 
 // AvailZoneNotifLinkJSONRequestBody defines body for AvailZoneNotifLink for application/json ContentType.
 type AvailZoneNotifLinkJSONRequestBody AvailZoneNotifLinkJSONBody
