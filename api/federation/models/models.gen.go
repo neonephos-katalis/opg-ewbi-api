@@ -1014,12 +1014,14 @@ type AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo string
 
 // FileStatusCallbackLinkJSONBody defines parameters for FileStatusCallbackLink.
 type FileStatusCallbackLinkJSONBody struct {
-	UploadStatusInfo    string              `json:"uploadStatusInfo"`
+	FileId           FileId `json:"fileId"`
+	UploadStatusInfo string `json:"uploadStatusInfo"`
 }
 
 // ArtefactStatusCallbackLinkJSONBody defines parameters for ArtefactStatusCallbackLink.
 type ArtefactStatusCallbackLinkJSONBody struct {
-	UploadStatusInfo    string              `json:"uploadStatusInfo"`
+	ArtefactId       ArtefactId `json:"artefactId"`
+	UploadStatusInfo string     `json:"uploadStatusInfo"`
 }
 
 // AvailZoneNotifLinkJSONBody defines parameters for AvailZoneNotifLink.
