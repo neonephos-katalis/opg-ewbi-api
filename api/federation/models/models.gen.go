@@ -974,7 +974,7 @@ type AppInstCallbackLinkJSONBody struct {
 	AppInstanceId   InstanceIdentifier `json:"appInstanceId"`
 	AppInstanceInfo struct {
 		// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-		AccesspointInfo *AccessPointInfo `json:"accesspointInfo,omitempty"`
+		AccesspointInfo []AccessPointInfo `json:"accesspointInfo,omitempty"`
 
 		// AppInstanceState Running status of the application instance.
 		AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
@@ -1014,15 +1014,11 @@ type AppStatusCallbackLinkJSONBodyStatusInfoOnboardStatusInfo string
 
 // FileStatusCallbackLinkJSONBody defines parameters for FileStatusCallbackLink.
 type FileStatusCallbackLinkJSONBody struct {
-	FederationContextId FederationContextId `json:"federationContextId"`
-	FileId              FileId              `json:"fileId"`
 	UploadStatusInfo    string              `json:"uploadStatusInfo"`
 }
 
 // ArtefactStatusCallbackLinkJSONBody defines parameters for ArtefactStatusCallbackLink.
 type ArtefactStatusCallbackLinkJSONBody struct {
-	FederationContextId FederationContextId `json:"federationContextId"`
-	ArtefactId          ArtefactId          `json:"artefactId"`
 	UploadStatusInfo    string              `json:"uploadStatusInfo"`
 }
 
