@@ -305,7 +305,6 @@ func (c *Client) AppStatusCallbackLink(ctx context.Context, federationCallbackId
 	return c.Client.Do(req)
 }
 
-
 func (c *Client) ArtefactStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewArtefactStatusCallbackLinkRequestWithBody(c.Server, federationCallbackId, contentType, body)
 	if err != nil {
@@ -2816,7 +2815,6 @@ func (r AppStatusCallbackLinkResponse) StatusCode() int {
 	return 0
 }
 
-
 type ArtefactStatusCallbackLinkResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
@@ -3967,7 +3965,6 @@ func (c *ClientWithResponses) AppStatusCallbackLinkWithResponse(ctx context.Cont
 	}
 	return ParseAppStatusCallbackLinkResponse(rsp)
 }
-
 
 // ArtefactStatusCallbackLinkWithBodyWithResponse request with arbitrary body returning *ArtefactStatusCallbackLinkResponse
 func (c *ClientWithResponses) ArtefactStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error) {

@@ -105,7 +105,7 @@ func k8sCustomResourceNameFromArtefactID(federationContextID, artefactID string)
 
 func isValidArtefactStatus(status string) bool {
 	switch status {
-	case "Pending", "Uploaded", "Failed", "Removing", "Removed":
+	case "Pending", "Ready", "Error", "Unknown":
 		return true
 	}
 	return false

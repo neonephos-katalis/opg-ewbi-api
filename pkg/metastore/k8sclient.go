@@ -272,10 +272,10 @@ func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federat
 		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if updates.AppInstanceInfo.AppInstanceState != nil {
-		if state := string(*updates.AppInstanceInfo.AppInstanceState); !isValidApplicationInstanceStatus(state) {
-			log.Println("Invalid given state", state, "on UpdateApplicationStatus")
+		if state := string(*updates.AppInstanceInfo.AppInstanceState); isValidApplicationInstanceStatus(state) {
+			return c.updateK8sObjectAppInstStatus(res, updates)
 		}
-		return c.updateK8sObjectAppInstStatus(res, updates)
+		log.Println("Invalid given state", updates.AppInstanceInfo.AppInstanceState, "on UpdateApplicationStatus")
 	} else {
 		log.Println("Unable to update status, no state given")
 	}
@@ -294,10 +294,10 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 	}
 	if len(updates.StatusInfo) > 0 {
 		state := string(updates.StatusInfo[0].OnboardStatusInfo)
-		if !isValidApplicationStatus(state) {
-			log.Println("Invalid given state", state, "on UpdateApplicationStatus")
+		if isValidApplicationStatus(state) {
+			return c.updateK8sObjectStatus(res, state)
 		}
-		return c.updateK8sObjectStatus(res, state)
+		log.Println("Invalid given state", state, "on UpdateApplicationStatus")
 	} else {
 		log.Println("Unable to update status, no state given")
 	}
@@ -335,6 +335,7 @@ func (c *k8sClient) UpdateArtefactStatus(ctx context.Context, federationCallback
 	if isValidArtefactStatus(state) {
 		return c.updateK8sObjectStatus(res, state)
 	}
+	log.Println("Invalid given state", state, "on UpdateArtefactStatus")
 	return nil
 }
 
