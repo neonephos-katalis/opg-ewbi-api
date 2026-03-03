@@ -98,8 +98,8 @@ func (m *UploadFile) k8sCustomResource(namespace string, opts ...Opt) (*opgv1bet
 }
 
 func isValidFileStatus(status string) bool {
-	switch status {
-	case "Pending", "Uploaded", "Failed", "Removing", "Removed":
+	switch opgv1beta1.FilePhase(status) {
+	case opgv1beta1.FileStatePending, opgv1beta1.FileStateReady, opgv1beta1.FileStateError, opgv1beta1.FileStateUnknown:
 		return true
 	}
 	return false

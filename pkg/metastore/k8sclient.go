@@ -318,6 +318,7 @@ func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID s
 	if isValidFileStatus(state) {
 		return c.updateK8sObjectStatus(res, state)
 	}
+	log.Println("Invalid given state", state, "on UpdateFileStatus")
 	return nil
 }
 
