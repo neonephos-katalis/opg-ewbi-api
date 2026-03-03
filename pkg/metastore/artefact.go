@@ -104,8 +104,8 @@ func k8sCustomResourceNameFromArtefactID(federationContextID, artefactID string)
 }
 
 func isValidArtefactStatus(status string) bool {
-	switch status {
-	case "Pending", "Ready", "Error", "Unknown":
+	switch opgv1beta1.ArtefactState(status) {
+	case opgv1beta1.ArtefactStateReconciling, opgv1beta1.ArtefactStateReady, opgv1beta1.ArtefactStateError, opgv1beta1.ArtefactStateUnknown:
 		return true
 	}
 	return false
