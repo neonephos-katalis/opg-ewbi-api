@@ -270,11 +270,9 @@ func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID s
 	if !ok {
 		return missMatchErr("file", id, federationCallbackID, &opgv1beta1.File{}, obj)
 	}
-	if len(updates.StatusInfo) > 0 {
-		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
-		if isValidFileStatus(state) {
-			return c.updateK8sObjectStatus(res, state)
-		}
+	state := strcase.ToCamel(string(updates.UpdateStatus))
+	if isValidFileStatus(state) {
+		return c.updateK8sObjectStatus(res, state)
 	}
 	return nil
 }
@@ -289,11 +287,9 @@ func (c *k8sClient) UpdateArtefactStatus(ctx context.Context, federationCallback
 	if !ok {
 		return missMatchErr("artefact", id, federationCallbackID, &opgv1beta1.Artefact{}, obj)
 	}
-	if len(updates.StatusInfo) > 0 {
-		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
-		if isValidArtefactStatus(state) {
-			return c.updateK8sObjectStatus(res, state)
-		}
+	state := strcase.ToCamel(string(updates.UpdateStatus))
+	if isValidArtefactStatus(state) {
+		return c.updateK8sObjectStatus(res, state)
 	}
 	return nil
 }

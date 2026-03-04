@@ -2702,7 +2702,7 @@ paths:
                             message:
                               type: string
                               description: Event information or failure message.
-                            accesspointInfo:
+                            accessPointInfo:
                               $ref: '#/components/schemas/AccessPointInfo'
                           minProperties: 1
                         modificationDate:
@@ -2767,7 +2767,7 @@ paths:
                 properties:
                   appInstanceState:
                     $ref: '#/components/schemas/InstanceState'
-                  accesspointInfo:
+                  accessPointInfo:
                     $ref: '#/components/schemas/AccessPointInfo'
                 minProperties: 1
         "400":
