@@ -70,7 +70,7 @@ func applicationInstanceFromK8sCustomResource(appInstanceID string, appInstance 
 		var accessPoints []models.AccessPoints
 		for _, ap := range api.AccessPoints {
 			accessPoints = append(accessPoints, models.AccessPoints{
-				Port:          int(ap.Port),
+				Port:          ap.Port,
 				Fqdn:          ap.Fqdn,
 				Ipv4Addresses: ap.Ipv4Addresses,
 				Ipv6Addresses: ap.Ipv6Addresses,
