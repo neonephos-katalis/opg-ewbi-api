@@ -4073,12 +4073,30 @@ func (c *ClientWithResponses) AppStatusCallbackLinkWithResponse(ctx context.Cont
 	return ParseAppStatusCallbackLinkResponse(rsp)
 }
 
+// ArtefactStatusCallbackLinkWithBodyWithResponse request with arbitrary body returning *ArtefactStatusCallbackLinkResponse
+func (c *ClientWithResponses) ArtefactStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error) {
+	rsp, err := c.ArtefactStatusCallbackLinkWithBody(ctx, federationCallbackId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArtefactStatusCallbackLinkResponse(rsp)
+}
+
 func (c *ClientWithResponses) ArtefactStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body ArtefactStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error) {
 	rsp, err := c.ArtefactStatusCallbackLink(ctx, federationCallbackId, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
 	return ParseArtefactStatusCallbackLinkResponse(rsp)
+}
+
+// FileStatusCallbackLinkWithBodyWithResponse request with arbitrary body returning *FileStatusCallbackLinkResponse
+func (c *ClientWithResponses) FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
+	rsp, err := c.FileStatusCallbackLinkWithBody(ctx, federationCallbackId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseFileStatusCallbackLinkResponse(rsp)
 }
 
 func (c *ClientWithResponses) FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
