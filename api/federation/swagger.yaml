@@ -3593,6 +3593,112 @@ paths:
           $ref: '#/components/responses/520'
         default:
           $ref: '#/components/responses/default'
+  /{federationCallbackId}/artefactStatusCallbackLink:
+    post:
+      operationId: ArtefactStatusCallbackLink
+      parameters:
+        - name: federationCallbackId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/FederationCallbackId'
+      requestBody:
+        description: Notification payload.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - federationContextId
+                - Filed
+                - updateStatus
+              properties:
+                federationContextId:
+                  $ref: '#/components/schemas/FederationContextId'
+                artefactId:
+                  $ref: '#/components/schemas/ArtefactId'
+                updateStatus:
+                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  type: string
+                  enum:
+                    - Pending
+                    - Error
+                    - Ready
+                    - Unknown
+      responses:
+        "204":
+          description: Artefact status updated
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "404":
+          $ref: '#/components/responses/404'
+        "409":
+          $ref: '#/components/responses/409'
+        "422":
+          $ref: '#/components/responses/422'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+        "520":
+          $ref: '#/components/responses/520'
+        default:
+          $ref: '#/components/responses/default'
+  /{federationCallbackId}/fileStatusCallbackLink:
+    post:
+      operationId: FileStatusCallbackLink
+      parameters:
+        - name: federationCallbackId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/FederationCallbackId'
+      requestBody:
+        description: Notification payload.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - federationContextId
+                - Filed
+                - updateStatus
+              properties:
+                federationContextId:
+                  $ref: '#/components/schemas/FederationContextId'
+                fileId:
+                  $ref: '#/components/schemas/FileId'
+                updateStatus:
+                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  type: string
+                  enum:
+                    - Pending
+                    - Error
+                    - Ready
+                    - Unknown
+      responses:
+        "204":
+          description: Artefact status updated
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "404":
+          $ref: '#/components/responses/404'
+        "409":
+          $ref: '#/components/responses/409'
+        "422":
+          $ref: '#/components/responses/422'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+        "520":
+          $ref: '#/components/responses/520'
+        default:
+          $ref: '#/components/responses/default'
   /{federationCallbackId}/appInstCallbackLink:
     post:
       operationId: AppInstCallbackLink
