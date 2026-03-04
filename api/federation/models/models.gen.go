@@ -319,7 +319,7 @@ type AccessPointInfo struct {
 }
 type AccessPoints struct {
 	// Port Port number via which the application instance can be accessed
-	Port int `json:"port"`
+	Port []int `json:"port"`
 	// Fqdn Fully Qualified Domain Name (FQDN) via which the application instance can be accessed
 	Fqdn string `json:"fqdn"`
 	// Ipv4Addresses IPv4 address list via which the application instance can be accessed
@@ -974,7 +974,7 @@ type AppInstCallbackLinkJSONBody struct {
 	AppInstanceId   InstanceIdentifier `json:"appInstanceId"`
 	AppInstanceInfo struct {
 		// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-		AccessPointInfo *AccessPointInfo `json:"accessPointInfo,omitempty"`
+		AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
 
 		// AppInstanceState Running status of the application instance.
 		AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`

@@ -165,10 +165,10 @@ components:
     InstanceState:
       type: string
       enum:
-        - PENDING
-        - READY
-        - FAILED
-        - TERMINATING
+        - Pending
+        - Ready
+        - Failed
+        - Terminating
       description: Running status of the application instance.
     Ipv4Addr:
       type: string
@@ -2189,11 +2189,11 @@ paths:
                                 description: Defines change in application status. This change could be related to application itself or an application instance status
                                 type: string
                                 enum:
-                                  - PENDING
-                                  - ONBOARDED
-                                  - DEBOARDING
-                                  - REMOVED
-                                  - FAILED
+                                  - Pending
+                                  - Onboarded
+                                  - Deboarding
+                                  - Removed
+                                  - Failed
                           minItems: 1
               responses:
                 "204":
@@ -3566,11 +3566,11 @@ paths:
                         description: Defines change in application status. This change could be related to application itself or an application instance status
                         type: string
                         enum:
-                          - PENDING
-                          - ONBOARDED
-                          - DEBOARDING
-                          - REMOVED
-                          - FAILED
+                          - Pending
+                          - Onboarded
+                          - Deboarding
+                          - Removed
+                          - Failed
                   minItems: 1
       responses:
         "204":
