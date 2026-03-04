@@ -111,10 +111,10 @@ const (
 
 // Defines values for InstanceState.
 const (
-	InstanceStateFAILED      InstanceState = "FAILED"
-	InstanceStatePENDING     InstanceState = "PENDING"
-	InstanceStateREADY       InstanceState = "READY"
-	InstanceStateTERMINATING InstanceState = "TERMINATING"
+	InstanceStateFAILED      InstanceState = "Failed"
+	InstanceStatePENDING     InstanceState = "Pending"
+	InstanceStateREADY       InstanceState = "Ready"
+	InstanceStateTERMINATING InstanceState = "Terminating"
 )
 
 // Defines values for InterfaceDetailsCommProtocol.
