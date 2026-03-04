@@ -2676,6 +2676,15 @@ type ClientWithResponsesInterface interface {
 
 	AppStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body AppStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*AppStatusCallbackLinkResponse, error)
 
+	// AppStatusCallbackLinkWithBodyWithResponse request with any body
+	ArtefactStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error)
+
+	ArtefactStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body ArtefactStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error)
+
+	// AppStatusCallbackLinkWithBodyWithResponse request with any body
+	FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
+
+	FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
 	// AvailZoneNotifLinkWithBodyWithResponse request with any body
 	AvailZoneNotifLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AvailZoneNotifLinkResponse, error)
 
