@@ -306,7 +306,7 @@ const (
 )
 
 type AppInstanceDetailsResponse struct {
-	// AccesspointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+	// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
 	AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
 	// AppInstanceState Running status of the application instance.
 	AppInstanceState string `json:"appInstanceState,omitempty"`
