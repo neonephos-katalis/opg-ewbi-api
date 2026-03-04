@@ -19,12 +19,14 @@ type Client interface {
 	RemoveFederation(ctx context.Context, federationContextID string) error
 
 	GetFile(ctx context.Context, federationContextID, id string) (*File, error)
-
 	UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error)
+	UpdateFileStatus(ctx context.Context, federationCallbackID string, updates *models.FileStatusCallbackLinkJSONRequestBody) error
+
 	RemoveFile(ctx context.Context, federationContextID, id string) error
 
 	GetArtefact(ctx context.Context, federationContextID, id string) (*Artefact, error)
 	UploadArtefact(ctx context.Context, artefact *UploadArtefact) (*opgv1beta1.Artefact, error)
+	UpdateArtefactStatus(ctx context.Context, federationCallbackID string, updates *models.ArtefactStatusCallbackLinkJSONRequestBody) error
 	RemoveArtefact(ctx context.Context, federationContextID, id string) error
 
 	GetApplication(ctx context.Context, federationContextID, id string) (*Application, error)

@@ -167,7 +167,6 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 		return sendErrorResponseFromError(c, err)
 	}
 	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
 		return c.JSON(http.StatusAccepted, models.ApplicationResponseData{
 			State: "Pending",
 		})
@@ -227,7 +226,6 @@ func (h *handler) UploadArtefact(c echo.Context, federationContextId models.Fede
 		return sendErrorResponseFromError(c, err)
 	}
 	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		fmt.Printf("+++++++ Artefact response:  Pending\n")
 		return c.JSON(http.StatusAccepted, models.ArtefactResponseData{
 			State: "Pending"})
 	}
@@ -277,7 +275,6 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 		return sendErrorResponseFromError(c, err)
 	}
 	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		fmt.Printf("+++++++ File response: %+v\n", string(obj.Status.State))
 		return c.JSON(http.StatusAccepted, models.FileResponseData{
 			State: "Pending",
 		})

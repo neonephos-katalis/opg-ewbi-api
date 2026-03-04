@@ -2,6 +2,7 @@ package metastore
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 
@@ -11,9 +12,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	k8scli "sigs.k8s.io/controller-runtime/pkg/client"
 
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
@@ -50,14 +53,6 @@ func (c *k8sClient) createK8sObject(object k8scli.Object) error {
 			if getErr := c.kubernetes.Get(ctx, key, existing); getErr != nil {
 				return errors.Wrapf(getErr, "failed to get existing object")
 			}
-			// Check if specs are different
-			// if !specsAreDifferent(existing, object) {
-			// 	// No update needed
-			// 	if updateErr := c.kubernetes.Update(ctx, object); updateErr != nil {
-			// 		return errors.Wrapf(updateErr, "failed to update existing object")
-			// 	}
-			// 	return nil
-			// }
 			object.SetResourceVersion(existing.GetResourceVersion()) //Set resource version for update
 			object.SetUID(existing.GetUID())                         //Ensure UID is set to avoid issues during update
 			// Proceed to update the existing object
@@ -165,6 +160,35 @@ func (c *k8sClient) updateK8sObjectStatus(object k8scli.Object, status string) e
 	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
 	}
+	return nil
+}
+
+func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
+	info := updates.AppInstanceInfo
+	var patch struct {
+		AccessPointInfo []models.AccessPointInfo `json:"accessPointInfo,omitempty"`
+		State           models.InstanceState     `json:"state,omitempty"`
+	}
+
+	if info.AppInstanceState != nil {
+		patch.State = *info.AppInstanceState
+	}
+	patch.AccessPointInfo = info.AccesspointInfo
+
+	patchBytes, err := json.Marshal(map[string]any{"status": patch})
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal status patch")
+	}
+
+	if err := c.kubernetes.Status().Patch(
+		context.TODO(),
+		object,
+		k8scli.RawPatch(types.MergePatchType, patchBytes), // Usa types.MergePatchType
+		&k8scli.SubResourcePatchOptions{},
+	); err != nil {
+		return errors.Wrapf(err, "unable to update object %T", object)
+	}
+
 	return nil
 }
 

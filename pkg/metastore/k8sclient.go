@@ -260,19 +260,38 @@ func (c *k8sClient) RemoveFile(ctx context.Context, federationContextID, id stri
 	return nil
 }
 
-func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federationCallbackID string, updates *models.AppInstCallbackLinkJSONRequestBody) error {
-	id := updates.AppInstanceId
-	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.ApplicationInstanceList{}, federationCallbackID)
+func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID string, updates *models.FileStatusCallbackLinkJSONRequestBody) error {
+	id := updates.FileId
+	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.FileList{}, federationCallbackID)
 	if err != nil {
 		return err
 	}
-	res, ok := obj.(*opgv1beta1.ApplicationInstance)
+	res, ok := obj.(*opgv1beta1.File)
 	if !ok {
-		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
+		return missMatchErr("file", id, federationCallbackID, &opgv1beta1.File{}, obj)
 	}
-	if updates.AppInstanceInfo.AppInstanceState != nil {
-		state := strcase.ToCamel(string(*updates.AppInstanceInfo.AppInstanceState))
-		if isValidApplicationInstanceStatus(state) {
+	if len(updates.StatusInfo) > 0 {
+		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
+		if isValidFileStatus(state) {
+			return c.updateK8sObjectStatus(res, state)
+		}
+	}
+	return nil
+}
+
+func (c *k8sClient) UpdateArtefactStatus(ctx context.Context, federationCallbackID string, updates *models.ArtefactStatusCallbackLinkJSONRequestBody) error {
+	id := updates.ArtefactId
+	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.ArtefactList{}, federationCallbackID)
+	if err != nil {
+		return err
+	}
+	res, ok := obj.(*opgv1beta1.Artefact)
+	if !ok {
+		return missMatchErr("artefact", id, federationCallbackID, &opgv1beta1.Artefact{}, obj)
+	}
+	if len(updates.StatusInfo) > 0 {
+		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
+		if isValidArtefactStatus(state) {
 			return c.updateK8sObjectStatus(res, state)
 		}
 	}
@@ -293,6 +312,25 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
 		if isValidApplicationStatus(state) {
 			return c.updateK8sObjectStatus(res, state)
+		}
+	}
+	return nil
+}
+
+func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federationCallbackID string, updates *models.AppInstCallbackLinkJSONRequestBody) error {
+	id := updates.AppInstanceId
+	obj, err := c.getKubernetesCallbackObject(id, &opgv1beta1.ApplicationInstanceList{}, federationCallbackID)
+	if err != nil {
+		return err
+	}
+	res, ok := obj.(*opgv1beta1.ApplicationInstance)
+	if !ok {
+		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
+	}
+	if updates.AppInstanceInfo.AppInstanceState != nil {
+		state := strcase.ToCamel(string(*updates.AppInstanceInfo.AppInstanceState))
+		if isValidApplicationInstanceStatus(state) {
+			return c.updateK8sObjectAppInstStatus(res, updates)
 		}
 	}
 	return nil
