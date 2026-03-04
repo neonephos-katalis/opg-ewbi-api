@@ -971,6 +971,7 @@ func NewAppInstCallbackLinkRequestWithBody(server string, federationCallbackId F
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
+	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -1040,6 +1041,7 @@ func NewAppStatusCallbackLinkRequestWithBody(server string, federationCallbackId
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
+	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -1076,6 +1078,7 @@ func NewArtefactStatusCallbackLinkRequestWithBody(server string, federationCallb
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
+	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -1112,6 +1115,7 @@ func NewFileStatusCallbackLinkRequestWithBody(server string, federationCallbackI
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
+	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
