@@ -2,7 +2,9 @@ package metastore
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -10,10 +12,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	k8scli "sigs.k8s.io/controller-runtime/pkg/client"
 
-	opgv1beta1 "github.com/nbycomp/neonephos-opg-ewbi-operator/api/v1beta1"
+	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 type Opt func(obj metav1.Object) error
@@ -38,15 +42,49 @@ func (c *k8sClient) buildOwnerReferenceOption(federationContextID string) (Opt, 
 }
 
 func (c *k8sClient) createK8sObject(object k8scli.Object) error {
+	ctx := context.TODO()
+	// Attempt to create the object
 	if err := c.kubernetes.Create(context.TODO(), object, &k8scli.CreateOptions{}); err != nil {
+		if k8serrors.IsAlreadyExists(err) {
+			//return errors.Wrapf(ErrAlreadyExists, "%s", errDetails)
+			existing := object.DeepCopyObject().(k8scli.Object) //Create a new instance to hold existing object
+			key := k8scli.ObjectKeyFromObject(object)           //Get the namespaced name key
+			//Retrieve existing object to get resource version for update
+			if getErr := c.kubernetes.Get(ctx, key, existing); getErr != nil {
+				return errors.Wrapf(getErr, "failed to get existing object")
+			}
+			object.SetResourceVersion(existing.GetResourceVersion()) //Set resource version for update
+			object.SetUID(existing.GetUID())                         //Ensure UID is set to avoid issues during update
+			// Proceed to update the existing object
+			if updateErr := c.kubernetes.Update(ctx, object); updateErr != nil {
+				return errors.Wrapf(updateErr, "failed to update existing object")
+			}
+			return nil
+		}
 		errDetails := fmt.Sprintf("Failed to create %s (ID: %s)", getObjectKind(object), getObjectID(object))
 		log.WithError(err).Error(errDetails)
-		if k8serrors.IsAlreadyExists(err) {
-			return errors.Wrapf(ErrAlreadyExists, "%s", errDetails)
-		}
 		return errors.Wrapf(err, "%s", errDetails)
 	}
 	return nil
+}
+
+// Add a function to compare specs of two k8s objects
+func specsAreDifferent(existing, desired k8scli.Object) bool {
+	valExisting := reflect.ValueOf(existing)
+	valDesired := reflect.ValueOf(desired)
+	if valExisting.Kind() == reflect.Ptr {
+		valExisting = valExisting.Elem()
+	}
+	if valDesired.Kind() == reflect.Ptr {
+		valDesired = valDesired.Elem()
+	}
+	fieldExisting := valExisting.FieldByName("Spec")
+	fieldDesired := valDesired.FieldByName("Spec")
+	if !fieldExisting.IsValid() || !fieldDesired.IsValid() {
+		return true
+	}
+	// DeepEqual controlla se il contenuto è semanticamente uguale
+	return !reflect.DeepEqual(fieldExisting.Interface(), fieldDesired.Interface())
 }
 
 // getKubernetesCallbackObject retrieves a Kubernetes object by id and federation callback id.
@@ -122,6 +160,35 @@ func (c *k8sClient) updateK8sObjectStatus(object k8scli.Object, status string) e
 	); err != nil {
 		return errors.Wrapf(err, "unable to update object %T", object)
 	}
+	return nil
+}
+
+func (c *k8sClient) updateK8sObjectAppInstStatus(object k8scli.Object, updates *models.AppInstCallbackLinkJSONRequestBody) (err error) {
+	info := updates.AppInstanceInfo
+	var patch struct {
+		AccessPointInfo []models.AccessPointInfo `json:"accessPointInfo,omitempty"`
+		State           *models.InstanceState    `json:"state,omitempty"`
+	}
+
+	if info.AppInstanceState != nil {
+		patch.State = info.AppInstanceState
+	}
+	patch.AccessPointInfo = info.AccessPointInfo
+
+	patchBytes, err := json.Marshal(map[string]any{"status": patch})
+	if err != nil {
+		return errors.Wrap(err, "failed to marshal status patch")
+	}
+
+	if err := c.kubernetes.Status().Patch(
+		context.TODO(),
+		object,
+		k8scli.RawPatch(types.MergePatchType, patchBytes), // Usa types.MergePatchType
+		&k8scli.SubResourcePatchOptions{},
+	); err != nil {
+		return errors.Wrapf(err, "unable to update object %T", object)
+	}
+
 	return nil
 }
 

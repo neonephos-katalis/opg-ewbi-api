@@ -3,11 +3,11 @@ version: "3.8"
 secrets:
   netrc:
     file: /Users/${USER}/.netrc # For Mac
-    # file: /home/${USER}/.netrc
+    #file: /home/${USER}/.netrc
 
 services:
   federation:
-    image: ghcr.io/neonephos-katalis/opg-ewbi-api:neonephos
+    image: ghcr.io/neonephos-katalis/opg-ewbi-api-arm64:v0.0.1
     build:
       context: ./
       dockerfile: Dockerfile
@@ -17,7 +17,7 @@ services:
       - .env
     restart: on-failure
     platform: linux/arm64
-    # platform: linux/amd64
+    #platform: linux/amd64
     ports:
       - "8080:8080"
 
@@ -26,7 +26,7 @@ services:
       context: ./
       dockerfile: Dockerfile.apigen
     platform: linux/arm64
-    # platform: linux/arm64
+    #platform: linux/amd64
     volumes:
       - ./api:/api
 
@@ -34,7 +34,7 @@ services:
     image: swaggerapi/swagger-ui
     container_name: swagger_ui
     platform: linux/arm64
-    # platform: linux/amd64
+    #platform: linux/amd64
     ports:
       - "8082:8080"
     volumes:

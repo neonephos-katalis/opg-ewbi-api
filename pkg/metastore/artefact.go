@@ -8,7 +8,7 @@ import (
 
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 	camara "github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
-	opgv1beta1 "github.com/nbycomp/neonephos-opg-ewbi-operator/api/v1beta1"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 type Artefact struct {
@@ -144,4 +144,12 @@ func artefactFromK8sCustomResource(artefact opgv1beta1.Artefact) (*Artefact, err
 		},
 		FederationContextId: artefact.Labels[opgLabel(federationContextIDLabel)],
 	}, nil
+}
+
+func isValidArtefactStatus(status string) bool {
+	switch opgv1beta1.ArtefactState(status) {
+	case opgv1beta1.ArtefactStateReconciling, opgv1beta1.ArtefactStateReady, opgv1beta1.ArtefactStateError, opgv1beta1.ArtefactStateUnknown:
+		return true
+	}
+	return false
 }

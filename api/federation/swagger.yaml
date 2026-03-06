@@ -165,10 +165,10 @@ components:
     InstanceState:
       type: string
       enum:
-        - PENDING
-        - READY
-        - FAILED
-        - TERMINATING
+        - Pending
+        - Ready
+        - Failed
+        - Terminating
       description: Running status of the application instance.
     Ipv4Addr:
       type: string
@@ -2189,11 +2189,11 @@ paths:
                                 description: Defines change in application status. This change could be related to application itself or an application instance status
                                 type: string
                                 enum:
-                                  - PENDING
-                                  - ONBOARDED
-                                  - DEBOARDING
-                                  - REMOVED
-                                  - FAILED
+                                  - Pending
+                                  - Onboarded
+                                  - Deboarding
+                                  - Removed
+                                  - Failed
                           minItems: 1
               responses:
                 "204":
@@ -2702,7 +2702,7 @@ paths:
                             message:
                               type: string
                               description: Event information or failure message.
-                            accesspointInfo:
+                            accessPointInfo:
                               $ref: '#/components/schemas/AccessPointInfo'
                           minProperties: 1
                         modificationDate:
@@ -2767,7 +2767,7 @@ paths:
                 properties:
                   appInstanceState:
                     $ref: '#/components/schemas/InstanceState'
-                  accesspointInfo:
+                  accessPointInfo:
                     $ref: '#/components/schemas/AccessPointInfo'
                 minProperties: 1
         "400":
@@ -3566,15 +3566,121 @@ paths:
                         description: Defines change in application status. This change could be related to application itself or an application instance status
                         type: string
                         enum:
-                          - PENDING
-                          - ONBOARDED
-                          - DEBOARDING
-                          - REMOVED
-                          - FAILED
+                          - Pending
+                          - Onboarded
+                          - Deboarding
+                          - Removed
+                          - Failed
                   minItems: 1
       responses:
         "204":
           description: Application status updated
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "404":
+          $ref: '#/components/responses/404'
+        "409":
+          $ref: '#/components/responses/409'
+        "422":
+          $ref: '#/components/responses/422'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+        "520":
+          $ref: '#/components/responses/520'
+        default:
+          $ref: '#/components/responses/default'
+  /{federationCallbackId}/artefactStatusCallbackLink:
+    post:
+      operationId: ArtefactStatusCallbackLink
+      parameters:
+        - name: federationCallbackId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/FederationCallbackId'
+      requestBody:
+        description: Notification payload.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - federationContextId
+                - Filed
+                - updateStatus
+              properties:
+                federationContextId:
+                  $ref: '#/components/schemas/FederationContextId'
+                artefactId:
+                  $ref: '#/components/schemas/ArtefactId'
+                updateStatus:
+                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  type: string
+                  enum:
+                    - Pending
+                    - Error
+                    - Ready
+                    - Unknown
+      responses:
+        "204":
+          description: Artefact status updated
+        "400":
+          $ref: '#/components/responses/400'
+        "401":
+          $ref: '#/components/responses/401'
+        "404":
+          $ref: '#/components/responses/404'
+        "409":
+          $ref: '#/components/responses/409'
+        "422":
+          $ref: '#/components/responses/422'
+        "500":
+          $ref: '#/components/responses/500'
+        "503":
+          $ref: '#/components/responses/503'
+        "520":
+          $ref: '#/components/responses/520'
+        default:
+          $ref: '#/components/responses/default'
+  /{federationCallbackId}/fileStatusCallbackLink:
+    post:
+      operationId: FileStatusCallbackLink
+      parameters:
+        - name: federationCallbackId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/FederationCallbackId'
+      requestBody:
+        description: Notification payload.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - federationContextId
+                - Filed
+                - updateStatus
+              properties:
+                federationContextId:
+                  $ref: '#/components/schemas/FederationContextId'
+                fileId:
+                  $ref: '#/components/schemas/FileId'
+                updateStatus:
+                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  type: string
+                  enum:
+                    - Pending
+                    - Error
+                    - Ready
+                    - Unknown
+      responses:
+        "204":
+          description: Artefact status updated
         "400":
           $ref: '#/components/responses/400'
         "401":

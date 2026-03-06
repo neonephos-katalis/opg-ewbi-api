@@ -8,7 +8,7 @@ import (
 
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/models"
 	camara "github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
-	opgv1beta1 "github.com/nbycomp/neonephos-opg-ewbi-operator/api/v1beta1"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 type File struct {
@@ -99,4 +99,12 @@ func (m *UploadFile) k8sCustomResource(namespace string, opts ...Opt) (*opgv1bet
 
 func k8sCustomResourceNameFromFileID(federationContextID, fileID string) string {
 	return fmt.Sprintf("%s-%s", fileKind, uuidV5Fn(federationContextID+"/"+fileID))
+}
+
+func isValidFileStatus(status string) bool {
+	switch opgv1beta1.FileState(status) {
+	case opgv1beta1.FileStatePending, opgv1beta1.FileStateReady, opgv1beta1.FileStateError, opgv1beta1.FileStateUnknown:
+		return true
+	}
+	return false
 }

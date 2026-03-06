@@ -15,7 +15,7 @@ import (
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
 	"github.com/neonephos-katalis/opg-ewbi-api/cmd/app/config"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/handler"
-	opgv1beta1 "github.com/nbycomp/neonephos-opg-ewbi-operator/api/v1beta1"
+	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 func main() {
@@ -69,7 +69,7 @@ func main() {
 		},
 	}))
 	// Validate request and return errors using the expected models.ProblemDetails format
-	e.Use(server.Validator())
+	//e.Use(server.Validator())
 
 	scheme := runtime.NewScheme()
 	utilruntime.Must(opgv1beta1.AddToScheme(scheme))
