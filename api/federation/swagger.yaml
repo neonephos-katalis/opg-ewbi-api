@@ -3610,7 +3610,7 @@ paths:
               type: object
               required:
                 - federationContextId
-                - Filed
+                - artefactId
                 - updateStatus
               properties:
                 federationContextId:
