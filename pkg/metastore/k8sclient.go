@@ -376,7 +376,7 @@ func (c *k8sClient) UploadArtefact(ctx context.Context, artefact *UploadArtefact
 }
 
 func (c *k8sClient) UploadFile(ctx context.Context, file *UploadFile) (*opgv1beta1.File, error) {
-	opt, err := c.buildOwnerReferenceOption(file.FederationContextId) //Serve a legare la nuova risorsa a una risorsa genitore
+	opt, err := c.buildOwnerReferenceOption(file.FederationContextId)
 	if err != nil {
 		return nil, err
 	}
