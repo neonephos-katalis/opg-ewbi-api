@@ -23,20 +23,20 @@ type ServerInterface interface {
 	// (POST /partner)
 	CreateFederation(ctx echo.Context) error
 
-	// (POST /{federationCallbackId}/fileStatusCallbackLink)
-	FileStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
-
-	// (POST /{federationCallbackId}/artefactStatusCallbackLink)
-	ArtefactStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
+	// (POST /{federationCallbackId}/appInstCallbackLink)
+	AppInstCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
 
 	// (POST /{federationCallbackId}/appStatusCallbackLink)
 	AppStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
 
-	// (POST /{federationCallbackId}/appInstCallbackLink)
-	AppInstCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
+	// (POST /{federationCallbackId}/artefactStatusCallbackLink)
+	ArtefactStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
 
 	// (POST /{federationCallbackId}/availZoneNotifLink)
 	AvailZoneNotifLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
+
+	// (POST /{federationCallbackId}/fileStatusCallbackLink)
+	FileStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
 
 	// (POST /{federationCallbackId}/partnerStatusLink)
 	PartnerStatusLink(ctx echo.Context, federationCallbackId FederationCallbackId) error
@@ -146,8 +146,8 @@ func (w *ServerInterfaceWrapper) CreateFederation(ctx echo.Context) error {
 	return err
 }
 
-// FileStatusCallbackLink converts echo context to params.
-func (w *ServerInterfaceWrapper) FileStatusCallbackLink(ctx echo.Context) error {
+// AppInstCallbackLink converts echo context to params.
+func (w *ServerInterfaceWrapper) AppInstCallbackLink(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "federationCallbackId" -------------
 	var federationCallbackId FederationCallbackId
@@ -158,23 +158,7 @@ func (w *ServerInterfaceWrapper) FileStatusCallbackLink(ctx echo.Context) error 
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.FileStatusCallbackLink(ctx, federationCallbackId)
-	return err
-}
-
-// ArtefactStatusCallbackLink converts echo context to params.
-func (w *ServerInterfaceWrapper) ArtefactStatusCallbackLink(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "federationCallbackId" -------------
-	var federationCallbackId FederationCallbackId
-
-	err = runtime.BindStyledParameterWithOptions("simple", "federationCallbackId", ctx.Param("federationCallbackId"), &federationCallbackId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter federationCallbackId: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.ArtefactStatusCallbackLink(ctx, federationCallbackId)
+	err = w.Handler.AppInstCallbackLink(ctx, federationCallbackId)
 	return err
 }
 
@@ -194,8 +178,8 @@ func (w *ServerInterfaceWrapper) AppStatusCallbackLink(ctx echo.Context) error {
 	return err
 }
 
-// AppInstCallbackLink converts echo context to params.
-func (w *ServerInterfaceWrapper) AppInstCallbackLink(ctx echo.Context) error {
+// ArtefactStatusCallbackLink converts echo context to params.
+func (w *ServerInterfaceWrapper) ArtefactStatusCallbackLink(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "federationCallbackId" -------------
 	var federationCallbackId FederationCallbackId
@@ -206,7 +190,7 @@ func (w *ServerInterfaceWrapper) AppInstCallbackLink(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.AppInstCallbackLink(ctx, federationCallbackId)
+	err = w.Handler.ArtefactStatusCallbackLink(ctx, federationCallbackId)
 	return err
 }
 
@@ -223,6 +207,22 @@ func (w *ServerInterfaceWrapper) AvailZoneNotifLink(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.AvailZoneNotifLink(ctx, federationCallbackId)
+	return err
+}
+
+// FileStatusCallbackLink converts echo context to params.
+func (w *ServerInterfaceWrapper) FileStatusCallbackLink(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "federationCallbackId" -------------
+	var federationCallbackId FederationCallbackId
+
+	err = runtime.BindStyledParameterWithOptions("simple", "federationCallbackId", ctx.Param("federationCallbackId"), &federationCallbackId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter federationCallbackId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.FileStatusCallbackLink(ctx, federationCallbackId)
 	return err
 }
 
@@ -1015,11 +1015,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/partner", wrapper.CreateFederation)
-	router.POST(baseURL+"/:federationCallbackId/fileStatusCallbackLink", wrapper.FileStatusCallbackLink)
-	router.POST(baseURL+"/:federationCallbackId/artefactStatusCallbackLink", wrapper.ArtefactStatusCallbackLink)
 	router.POST(baseURL+"/:federationCallbackId/appInstCallbackLink", wrapper.AppInstCallbackLink)
 	router.POST(baseURL+"/:federationCallbackId/appStatusCallbackLink", wrapper.AppStatusCallbackLink)
+	router.POST(baseURL+"/:federationCallbackId/artefactStatusCallbackLink", wrapper.ArtefactStatusCallbackLink)
 	router.POST(baseURL+"/:federationCallbackId/availZoneNotifLink", wrapper.AvailZoneNotifLink)
+	router.POST(baseURL+"/:federationCallbackId/fileStatusCallbackLink", wrapper.FileStatusCallbackLink)
 	router.POST(baseURL+"/:federationCallbackId/partnerStatusLink", wrapper.PartnerStatusLink)
 	router.POST(baseURL+"/:federationCallbackId/resourceReservationCallbackLink", wrapper.ResourceReservationCallbackLink)
 	router.POST(baseURL+"/:federationContextId/application/lcm", wrapper.InstallApp)
@@ -1199,230 +1199,116 @@ func (response CreateFederationdefaultResponse) VisitCreateFederationResponse(w 
 	return nil
 }
 
-type FileStatusCallbackLinkRequestObject struct {
+type AppInstCallbackLinkRequestObject struct {
 	FederationCallbackId FederationCallbackId `json:"federationCallbackId"`
-	Body                 *FileStatusCallbackLinkJSONRequestBody
+	Body                 *AppInstCallbackLinkJSONRequestBody
 }
 
-type FileStatusCallbackLinkResponseObject interface {
-	VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error
+type AppInstCallbackLinkResponseObject interface {
+	VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error
 }
 
-type FileStatusCallbackLink204Response struct {
+type AppInstCallbackLink204Response struct {
 }
 
-func (response FileStatusCallbackLink204Response) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink204Response) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
 }
 
-type FileStatusCallbackLink400ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink400ApplicationProblemPlusJSONResponse struct {
 	N400ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink400ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink400ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(400)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink401ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink401ApplicationProblemPlusJSONResponse struct {
 	N401ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink401ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink401ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(401)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink404ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink404ApplicationProblemPlusJSONResponse struct {
 	N404ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink404ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink404ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink409ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink409ApplicationProblemPlusJSONResponse struct {
 	N409ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink409ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink409ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(409)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink422ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink422ApplicationProblemPlusJSONResponse struct {
 	N422ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink422ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink422ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(422)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink500ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink500ApplicationProblemPlusJSONResponse struct {
 	N500ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink500ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink500ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(500)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink503ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink503ApplicationProblemPlusJSONResponse struct {
 	N503ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink503ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink503ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(503)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLink520ApplicationProblemPlusJSONResponse struct {
+type AppInstCallbackLink520ApplicationProblemPlusJSONResponse struct {
 	N520ApplicationProblemPlusJSONResponse
 }
 
-func (response FileStatusCallbackLink520ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLink520ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(520)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type FileStatusCallbackLinkdefaultResponse struct {
+type AppInstCallbackLinkdefaultResponse struct {
 	StatusCode int
 }
 
-func (response FileStatusCallbackLinkdefaultResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.WriteHeader(response.StatusCode)
-	return nil
-}
-
-type ArtefactStatusCallbackLinkRequestObject struct {
-	FederationCallbackId FederationCallbackId `json:"federationCallbackId"`
-	Body                 *ArtefactStatusCallbackLinkJSONRequestBody
-}
-
-type ArtefactStatusCallbackLinkResponseObject interface {
-	VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error
-}
-
-type ArtefactStatusCallbackLink204Response struct {
-}
-
-func (response ArtefactStatusCallbackLink204Response) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.WriteHeader(204)
-	return nil
-}
-
-type ArtefactStatusCallbackLink400ApplicationProblemPlusJSONResponse struct {
-	N400ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink400ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(400)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink401ApplicationProblemPlusJSONResponse struct {
-	N401ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink401ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(401)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink404ApplicationProblemPlusJSONResponse struct {
-	N404ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink404ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(404)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink409ApplicationProblemPlusJSONResponse struct {
-	N409ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink409ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(409)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink422ApplicationProblemPlusJSONResponse struct {
-	N422ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink422ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(422)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink500ApplicationProblemPlusJSONResponse struct {
-	N500ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink500ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(500)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink503ApplicationProblemPlusJSONResponse struct {
-	N503ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink503ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(503)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLink520ApplicationProblemPlusJSONResponse struct {
-	N520ApplicationProblemPlusJSONResponse
-}
-
-func (response ArtefactStatusCallbackLink520ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/problem+json")
-	w.WriteHeader(520)
-
-	return json.NewEncoder(w).Encode(response)
-}
-
-type ArtefactStatusCallbackLinkdefaultResponse struct {
-	StatusCode int
-}
-
-func (response ArtefactStatusCallbackLinkdefaultResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
+func (response AppInstCallbackLinkdefaultResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(response.StatusCode)
 	return nil
 }
@@ -1541,116 +1427,116 @@ func (response AppStatusCallbackLinkdefaultResponse) VisitAppStatusCallbackLinkR
 	return nil
 }
 
-type AppInstCallbackLinkRequestObject struct {
+type ArtefactStatusCallbackLinkRequestObject struct {
 	FederationCallbackId FederationCallbackId `json:"federationCallbackId"`
-	Body                 *AppInstCallbackLinkJSONRequestBody
+	Body                 *ArtefactStatusCallbackLinkJSONRequestBody
 }
 
-type AppInstCallbackLinkResponseObject interface {
-	VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error
+type ArtefactStatusCallbackLinkResponseObject interface {
+	VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error
 }
 
-type AppInstCallbackLink204Response struct {
+type ArtefactStatusCallbackLink204Response struct {
 }
 
-func (response AppInstCallbackLink204Response) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink204Response) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
 }
 
-type AppInstCallbackLink400ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink400ApplicationProblemPlusJSONResponse struct {
 	N400ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink400ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink400ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(400)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink401ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink401ApplicationProblemPlusJSONResponse struct {
 	N401ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink401ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink401ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(401)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink404ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink404ApplicationProblemPlusJSONResponse struct {
 	N404ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink404ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink404ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink409ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink409ApplicationProblemPlusJSONResponse struct {
 	N409ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink409ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink409ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(409)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink422ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink422ApplicationProblemPlusJSONResponse struct {
 	N422ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink422ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink422ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(422)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink500ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink500ApplicationProblemPlusJSONResponse struct {
 	N500ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink500ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink500ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(500)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink503ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink503ApplicationProblemPlusJSONResponse struct {
 	N503ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink503ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink503ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(503)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLink520ApplicationProblemPlusJSONResponse struct {
+type ArtefactStatusCallbackLink520ApplicationProblemPlusJSONResponse struct {
 	N520ApplicationProblemPlusJSONResponse
 }
 
-func (response AppInstCallbackLink520ApplicationProblemPlusJSONResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLink520ApplicationProblemPlusJSONResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/problem+json")
 	w.WriteHeader(520)
 
 	return json.NewEncoder(w).Encode(response)
 }
 
-type AppInstCallbackLinkdefaultResponse struct {
+type ArtefactStatusCallbackLinkdefaultResponse struct {
 	StatusCode int
 }
 
-func (response AppInstCallbackLinkdefaultResponse) VisitAppInstCallbackLinkResponse(w http.ResponseWriter) error {
+func (response ArtefactStatusCallbackLinkdefaultResponse) VisitArtefactStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(response.StatusCode)
 	return nil
 }
@@ -1765,6 +1651,120 @@ type AvailZoneNotifLinkdefaultResponse struct {
 }
 
 func (response AvailZoneNotifLinkdefaultResponse) VisitAvailZoneNotifLinkResponse(w http.ResponseWriter) error {
+	w.WriteHeader(response.StatusCode)
+	return nil
+}
+
+type FileStatusCallbackLinkRequestObject struct {
+	FederationCallbackId FederationCallbackId `json:"federationCallbackId"`
+	Body                 *FileStatusCallbackLinkJSONRequestBody
+}
+
+type FileStatusCallbackLinkResponseObject interface {
+	VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error
+}
+
+type FileStatusCallbackLink204Response struct {
+}
+
+func (response FileStatusCallbackLink204Response) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type FileStatusCallbackLink400ApplicationProblemPlusJSONResponse struct {
+	N400ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink400ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(400)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink401ApplicationProblemPlusJSONResponse struct {
+	N401ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink401ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink404ApplicationProblemPlusJSONResponse struct {
+	N404ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink404ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink409ApplicationProblemPlusJSONResponse struct {
+	N409ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink409ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(409)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink422ApplicationProblemPlusJSONResponse struct {
+	N422ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink422ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(422)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink500ApplicationProblemPlusJSONResponse struct {
+	N500ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink500ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(500)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink503ApplicationProblemPlusJSONResponse struct {
+	N503ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink503ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(503)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLink520ApplicationProblemPlusJSONResponse struct {
+	N520ApplicationProblemPlusJSONResponse
+}
+
+func (response FileStatusCallbackLink520ApplicationProblemPlusJSONResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/problem+json")
+	w.WriteHeader(520)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type FileStatusCallbackLinkdefaultResponse struct {
+	StatusCode int
+}
+
+func (response FileStatusCallbackLinkdefaultResponse) VisitFileStatusCallbackLinkResponse(w http.ResponseWriter) error {
 	w.WriteHeader(response.StatusCode)
 	return nil
 }
@@ -2007,21 +2007,11 @@ type InstallAppResponseObject interface {
 }
 
 type InstallApp202Response struct {
-	AppIdentifier string `json:"appInstanceId"`
-	ZoneId        string `json:"zoneId"`
-	State         string `json:"state"`
 }
 
 func (response InstallApp202Response) VisitInstallAppResponse(w http.ResponseWriter) error {
 	w.WriteHeader(202)
-	responsePayload := struct {
-		ZoneId        string `json:"zoneId"`
-		AppIdentifier string `json:"appInstanceId"`
-	}{
-		ZoneId:        response.ZoneId,
-		AppIdentifier: response.AppIdentifier,
-	}
-	return json.NewEncoder(w).Encode(responsePayload)
+	return nil
 }
 
 type InstallApp400ApplicationProblemPlusJSONResponse struct {
@@ -2377,9 +2367,10 @@ type GetAppInstanceDetailsResponseObject interface {
 
 type GetAppInstanceDetails200JSONResponse struct {
 	// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccessPointInfo AccessPointInfo `json:"accessPointInfo,omitempty"`
+	AccessPointInfo *AccessPointInfo `json:"accessPointInfo,omitempty"`
+
 	// AppInstanceState Running status of the application instance.
-	AppInstanceState string `json:"appInstanceState,omitempty"`
+	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
 }
 
 func (response GetAppInstanceDetails200JSONResponse) VisitGetAppInstanceDetailsResponse(w http.ResponseWriter) error {
@@ -2496,19 +2487,10 @@ type OnboardApplicationResponseObject interface {
 }
 
 type OnboardApplication202Response struct {
-	Body ApplicationResponseData
 }
 
 func (response OnboardApplication202Response) VisitOnboardApplicationResponse(w http.ResponseWriter) error {
-	state := response.Body.State
-	switch state {
-	case "", "Pending":
-		w.WriteHeader(202)
-	case "Ready":
-		w.WriteHeader(200)
-	default:
-		w.WriteHeader(202)
-	}
+	w.WriteHeader(202)
 	return nil
 }
 
@@ -3326,19 +3308,10 @@ type UploadArtefactResponseObject interface {
 }
 
 type UploadArtefact200Response struct {
-	Body ArtefactResponseData
 }
 
 func (response UploadArtefact200Response) VisitUploadArtefactResponse(w http.ResponseWriter) error {
-	state := response.Body.State
-	switch state {
-	case "", "Pending":
-		w.WriteHeader(202)
-	case "Ready":
-		w.WriteHeader(200)
-	default:
-		w.WriteHeader(202)
-	}
+	w.WriteHeader(200)
 	return nil
 }
 
@@ -3586,7 +3559,7 @@ type GetArtefact200JSONResponse struct {
 	ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 	// ArtefactVersionInfo Artefact version information
-	ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
+	ArtefactVersionInfo string                                     `json:"artefactVersionInfo"`
 	ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 	// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3792,19 +3765,10 @@ type UploadFileResponseObject interface {
 }
 
 type UploadFile200Response struct {
-	Body FileResponseData
 }
 
 func (response UploadFile200Response) VisitUploadFileResponse(w http.ResponseWriter) error {
-	state := response.Body.State
-	switch state {
-	case "", "Pending":
-		w.WriteHeader(202)
-	case "Ready":
-		w.WriteHeader(200)
-	default:
-		w.WriteHeader(202)
-	}
+	w.WriteHeader(200)
 	return nil
 }
 
@@ -4057,9 +4021,6 @@ type ViewFile200JSONResponse struct {
 
 	// RepoType Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
 	RepoType *UploadFileMultipartBodyRepoType `json:"repoType,omitempty"`
-
-	Phase string `json:"phase"`
-	State string `json:"state"`
 }
 
 func (response ViewFile200JSONResponse) VisitViewFileResponse(w http.ResponseWriter) error {
@@ -5438,20 +5399,20 @@ type StrictServerInterface interface {
 	// (POST /partner)
 	CreateFederation(ctx context.Context, request CreateFederationRequestObject) (CreateFederationResponseObject, error)
 
-	// (POST /{federationCallbackId}/fileStatusCallbackLink)
-	FileStatusCallbackLink(ctx context.Context, request FileStatusCallbackLinkRequestObject) (FileStatusCallbackLinkResponseObject, error)
-
-	// (POST /{federationCallbackId}/appStatusCallbackLink)
-	ArtefactStatusCallbackLink(ctx context.Context, request ArtefactStatusCallbackLinkRequestObject) (ArtefactStatusCallbackLinkResponseObject, error)
+	// (POST /{federationCallbackId}/appInstCallbackLink)
+	AppInstCallbackLink(ctx context.Context, request AppInstCallbackLinkRequestObject) (AppInstCallbackLinkResponseObject, error)
 
 	// (POST /{federationCallbackId}/appStatusCallbackLink)
 	AppStatusCallbackLink(ctx context.Context, request AppStatusCallbackLinkRequestObject) (AppStatusCallbackLinkResponseObject, error)
 
-	// (POST /{federationCallbackId}/appInstCallbackLink)
-	AppInstCallbackLink(ctx context.Context, request AppInstCallbackLinkRequestObject) (AppInstCallbackLinkResponseObject, error)
+	// (POST /{federationCallbackId}/artefactStatusCallbackLink)
+	ArtefactStatusCallbackLink(ctx context.Context, request ArtefactStatusCallbackLinkRequestObject) (ArtefactStatusCallbackLinkResponseObject, error)
 
 	// (POST /{federationCallbackId}/availZoneNotifLink)
 	AvailZoneNotifLink(ctx context.Context, request AvailZoneNotifLinkRequestObject) (AvailZoneNotifLinkResponseObject, error)
+
+	// (POST /{federationCallbackId}/fileStatusCallbackLink)
+	FileStatusCallbackLink(ctx context.Context, request FileStatusCallbackLinkRequestObject) (FileStatusCallbackLinkResponseObject, error)
 
 	// (POST /{federationCallbackId}/partnerStatusLink)
 	PartnerStatusLink(ctx context.Context, request PartnerStatusLinkRequestObject) (PartnerStatusLinkResponseObject, error)
@@ -5588,62 +5549,31 @@ func (sh *strictHandler) CreateFederation(ctx echo.Context) error {
 	return nil
 }
 
-// FileStatusCallbackLink operation middleware
-func (sh *strictHandler) FileStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
-	var request FileStatusCallbackLinkRequestObject
+// AppInstCallbackLink operation middleware
+func (sh *strictHandler) AppInstCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
+	var request AppInstCallbackLinkRequestObject
 
 	request.FederationCallbackId = federationCallbackId
 
-	var body FileStatusCallbackLinkJSONRequestBody
+	var body AppInstCallbackLinkJSONRequestBody
 	if err := ctx.Bind(&body); err != nil {
 		return err
 	}
 	request.Body = &body
 
 	handler := func(ctx echo.Context, request interface{}) (interface{}, error) {
-		return sh.ssi.FileStatusCallbackLink(ctx.Request().Context(), request.(FileStatusCallbackLinkRequestObject))
+		return sh.ssi.AppInstCallbackLink(ctx.Request().Context(), request.(AppInstCallbackLinkRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "FileStatusCallbackLink")
+		handler = middleware(handler, "AppInstCallbackLink")
 	}
 
 	response, err := handler(ctx, request)
 
 	if err != nil {
 		return err
-	} else if validResponse, ok := response.(FileStatusCallbackLinkResponseObject); ok {
-		return validResponse.VisitFileStatusCallbackLinkResponse(ctx.Response())
-	} else if response != nil {
-		return fmt.Errorf("unexpected response type: %T", response)
-	}
-	return nil
-}
-
-// ArtefactStatusCallbackLink operation middleware
-func (sh *strictHandler) ArtefactStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
-	var request ArtefactStatusCallbackLinkRequestObject
-
-	request.FederationCallbackId = federationCallbackId
-
-	var body ArtefactStatusCallbackLinkJSONRequestBody
-	if err := ctx.Bind(&body); err != nil {
-		return err
-	}
-	request.Body = &body
-
-	handler := func(ctx echo.Context, request interface{}) (interface{}, error) {
-		return sh.ssi.ArtefactStatusCallbackLink(ctx.Request().Context(), request.(ArtefactStatusCallbackLinkRequestObject))
-	}
-	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "ArtefactStatusCallbackLink")
-	}
-
-	response, err := handler(ctx, request)
-
-	if err != nil {
-		return err
-	} else if validResponse, ok := response.(ArtefactStatusCallbackLinkResponseObject); ok {
-		return validResponse.VisitArtefactStatusCallbackLinkResponse(ctx.Response())
+	} else if validResponse, ok := response.(AppInstCallbackLinkResponseObject); ok {
+		return validResponse.VisitAppInstCallbackLinkResponse(ctx.Response())
 	} else if response != nil {
 		return fmt.Errorf("unexpected response type: %T", response)
 	}
@@ -5681,31 +5611,31 @@ func (sh *strictHandler) AppStatusCallbackLink(ctx echo.Context, federationCallb
 	return nil
 }
 
-// AppInstCallbackLink operation middleware
-func (sh *strictHandler) AppInstCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
-	var request AppInstCallbackLinkRequestObject
+// ArtefactStatusCallbackLink operation middleware
+func (sh *strictHandler) ArtefactStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
+	var request ArtefactStatusCallbackLinkRequestObject
 
 	request.FederationCallbackId = federationCallbackId
 
-	var body AppInstCallbackLinkJSONRequestBody
+	var body ArtefactStatusCallbackLinkJSONRequestBody
 	if err := ctx.Bind(&body); err != nil {
 		return err
 	}
 	request.Body = &body
 
 	handler := func(ctx echo.Context, request interface{}) (interface{}, error) {
-		return sh.ssi.AppInstCallbackLink(ctx.Request().Context(), request.(AppInstCallbackLinkRequestObject))
+		return sh.ssi.ArtefactStatusCallbackLink(ctx.Request().Context(), request.(ArtefactStatusCallbackLinkRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "AppInstCallbackLink")
+		handler = middleware(handler, "ArtefactStatusCallbackLink")
 	}
 
 	response, err := handler(ctx, request)
 
 	if err != nil {
 		return err
-	} else if validResponse, ok := response.(AppInstCallbackLinkResponseObject); ok {
-		return validResponse.VisitAppInstCallbackLinkResponse(ctx.Response())
+	} else if validResponse, ok := response.(ArtefactStatusCallbackLinkResponseObject); ok {
+		return validResponse.VisitArtefactStatusCallbackLinkResponse(ctx.Response())
 	} else if response != nil {
 		return fmt.Errorf("unexpected response type: %T", response)
 	}
@@ -5737,6 +5667,37 @@ func (sh *strictHandler) AvailZoneNotifLink(ctx echo.Context, federationCallback
 		return err
 	} else if validResponse, ok := response.(AvailZoneNotifLinkResponseObject); ok {
 		return validResponse.VisitAvailZoneNotifLinkResponse(ctx.Response())
+	} else if response != nil {
+		return fmt.Errorf("unexpected response type: %T", response)
+	}
+	return nil
+}
+
+// FileStatusCallbackLink operation middleware
+func (sh *strictHandler) FileStatusCallbackLink(ctx echo.Context, federationCallbackId FederationCallbackId) error {
+	var request FileStatusCallbackLinkRequestObject
+
+	request.FederationCallbackId = federationCallbackId
+
+	var body FileStatusCallbackLinkJSONRequestBody
+	if err := ctx.Bind(&body); err != nil {
+		return err
+	}
+	request.Body = &body
+
+	handler := func(ctx echo.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.FileStatusCallbackLink(ctx.Request().Context(), request.(FileStatusCallbackLinkRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "FileStatusCallbackLink")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		return err
+	} else if validResponse, ok := response.(FileStatusCallbackLinkResponseObject); ok {
+		return validResponse.VisitFileStatusCallbackLinkResponse(ctx.Response())
 	} else if response != nil {
 		return fmt.Errorf("unexpected response type: %T", response)
 	}

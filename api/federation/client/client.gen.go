@@ -106,10 +106,6 @@ type ClientInterface interface {
 
 	AppStatusCallbackLink(ctx context.Context, federationCallbackId FederationCallbackId, body AppStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	FileStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	FileStatusCallbackLink(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// ArtefactStatusCallbackLinkWithBody request with any body
 	ArtefactStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -119,6 +115,11 @@ type ClientInterface interface {
 	AvailZoneNotifLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	AvailZoneNotifLink(ctx context.Context, federationCallbackId FederationCallbackId, body AvailZoneNotifLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// FileStatusCallbackLinkWithBody request with any body
+	FileStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	FileStatusCallbackLink(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PartnerStatusLinkWithBody request with any body
 	PartnerStatusLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -334,30 +335,6 @@ func (c *Client) ArtefactStatusCallbackLink(ctx context.Context, federationCallb
 	return c.Client.Do(req)
 }
 
-func (c *Client) FileStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewFileStatusCallbackLinkRequestWithBody(c.Server, federationCallbackId, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-func (c *Client) FileStatusCallbackLink(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewFileStatusCallbackLinkRequest(c.Server, federationCallbackId, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 func (c *Client) AvailZoneNotifLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAvailZoneNotifLinkRequestWithBody(c.Server, federationCallbackId, contentType, body)
 	if err != nil {
@@ -372,6 +349,30 @@ func (c *Client) AvailZoneNotifLinkWithBody(ctx context.Context, federationCallb
 
 func (c *Client) AvailZoneNotifLink(ctx context.Context, federationCallbackId FederationCallbackId, body AvailZoneNotifLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewAvailZoneNotifLinkRequest(c.Server, federationCallbackId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) FileStatusCallbackLinkWithBody(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewFileStatusCallbackLinkRequestWithBody(c.Server, federationCallbackId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) FileStatusCallbackLink(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewFileStatusCallbackLinkRequest(c.Server, federationCallbackId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -971,7 +972,6 @@ func NewAppInstCallbackLinkRequestWithBody(server string, federationCallbackId F
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
-	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -997,28 +997,6 @@ func NewAppStatusCallbackLinkRequest(server string, federationCallbackId Federat
 	return NewAppStatusCallbackLinkRequestWithBody(server, federationCallbackId, "application/json", bodyReader)
 }
 
-// NewArtefactStatusCallbackLinkRequest calls the generic ArtefactStatusCallbackLink builder with application/json body
-func NewArtefactStatusCallbackLinkRequest(server string, federationCallbackId FederationCallbackId, body ArtefactStatusCallbackLinkJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewArtefactStatusCallbackLinkRequestWithBody(server, federationCallbackId, "application/json", bodyReader)
-}
-
-// NewFileStatusCallbackLinkRequest calls the generic FileStatusCallbackLink builder with application/json body
-func NewFileStatusCallbackLinkRequest(server string, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewFileStatusCallbackLinkRequestWithBody(server, federationCallbackId, "application/json", bodyReader)
-}
-
 // NewAppStatusCallbackLinkRequestWithBody generates requests for AppStatusCallbackLink with any type of body
 func NewAppStatusCallbackLinkRequestWithBody(server string, federationCallbackId FederationCallbackId, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
@@ -1041,7 +1019,6 @@ func NewAppStatusCallbackLinkRequestWithBody(server string, federationCallbackId
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
-	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -1054,6 +1031,17 @@ func NewAppStatusCallbackLinkRequestWithBody(server string, federationCallbackId
 	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
+}
+
+// NewArtefactStatusCallbackLinkRequest calls the generic ArtefactStatusCallbackLink builder with application/json body
+func NewArtefactStatusCallbackLinkRequest(server string, federationCallbackId FederationCallbackId, body ArtefactStatusCallbackLinkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewArtefactStatusCallbackLinkRequestWithBody(server, federationCallbackId, "application/json", bodyReader)
 }
 
 // NewArtefactStatusCallbackLinkRequestWithBody generates requests for ArtefactStatusCallbackLink with any type of body
@@ -1078,44 +1066,6 @@ func NewArtefactStatusCallbackLinkRequestWithBody(server string, federationCallb
 	}
 
 	queryURL, err := serverURL.Parse(operationPath)
-	fmt.Println("URL finale:", queryURL)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest("POST", queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-
-	return req, nil
-}
-
-// NewFileStatusCallbackLinkRequestWithBody generates requests for FileStatusCallbackLink with any type of body
-func NewFileStatusCallbackLinkRequestWithBody(server string, federationCallbackId FederationCallbackId, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	var pathParam0 string
-
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "federationCallbackId", runtime.ParamLocationPath, federationCallbackId)
-	if err != nil {
-		return nil, err
-	}
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/%s/fileStatusCallbackLink", pathParam0)
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	fmt.Println("URL finale:", queryURL)
 	if err != nil {
 		return nil, err
 	}
@@ -1158,6 +1108,53 @@ func NewAvailZoneNotifLinkRequestWithBody(server string, federationCallbackId Fe
 	}
 
 	operationPath := fmt.Sprintf("/%s/availZoneNotifLink", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewFileStatusCallbackLinkRequest calls the generic FileStatusCallbackLink builder with application/json body
+func NewFileStatusCallbackLinkRequest(server string, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewFileStatusCallbackLinkRequestWithBody(server, federationCallbackId, "application/json", bodyReader)
+}
+
+// NewFileStatusCallbackLinkRequestWithBody generates requests for FileStatusCallbackLink with any type of body
+func NewFileStatusCallbackLinkRequestWithBody(server string, federationCallbackId FederationCallbackId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "federationCallbackId", runtime.ParamLocationPath, federationCallbackId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/%s/fileStatusCallbackLink", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -2680,19 +2677,20 @@ type ClientWithResponsesInterface interface {
 
 	AppStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body AppStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*AppStatusCallbackLinkResponse, error)
 
-	// AppStatusCallbackLinkWithBodyWithResponse request with any body
+	// ArtefactStatusCallbackLinkWithBodyWithResponse request with any body
 	ArtefactStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error)
 
 	ArtefactStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body ArtefactStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*ArtefactStatusCallbackLinkResponse, error)
 
-	// AppStatusCallbackLinkWithBodyWithResponse request with any body
-	FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
-
-	FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
 	// AvailZoneNotifLinkWithBodyWithResponse request with any body
 	AvailZoneNotifLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AvailZoneNotifLinkResponse, error)
 
 	AvailZoneNotifLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body AvailZoneNotifLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*AvailZoneNotifLinkResponse, error)
+
+	// FileStatusCallbackLinkWithBodyWithResponse request with any body
+	FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
+
+	FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error)
 
 	// PartnerStatusLinkWithBodyWithResponse request with any body
 	PartnerStatusLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PartnerStatusLinkResponse, error)
@@ -2884,32 +2882,6 @@ type AppStatusCallbackLinkResponse struct {
 	ApplicationproblemJSON520 *N520
 }
 
-type FileStatusCallbackLinkResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *N400
-	ApplicationproblemJSON401 *N401
-	ApplicationproblemJSON404 *N404
-	ApplicationproblemJSON409 *N409
-	ApplicationproblemJSON422 *N422
-	ApplicationproblemJSON500 *N500
-	ApplicationproblemJSON503 *N503
-	ApplicationproblemJSON520 *N520
-}
-
-type ArtefactStatusCallbackLinkResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	ApplicationproblemJSON400 *N400
-	ApplicationproblemJSON401 *N401
-	ApplicationproblemJSON404 *N404
-	ApplicationproblemJSON409 *N409
-	ApplicationproblemJSON422 *N422
-	ApplicationproblemJSON500 *N500
-	ApplicationproblemJSON503 *N503
-	ApplicationproblemJSON520 *N520
-}
-
 // Status returns HTTPResponse.Status
 func (r AppStatusCallbackLinkResponse) Status() string {
 	if r.HTTPResponse != nil {
@@ -2926,6 +2898,19 @@ func (r AppStatusCallbackLinkResponse) StatusCode() int {
 	return 0
 }
 
+type ArtefactStatusCallbackLinkResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *N400
+	ApplicationproblemJSON401 *N401
+	ApplicationproblemJSON404 *N404
+	ApplicationproblemJSON409 *N409
+	ApplicationproblemJSON422 *N422
+	ApplicationproblemJSON500 *N500
+	ApplicationproblemJSON503 *N503
+	ApplicationproblemJSON520 *N520
+}
+
 // Status returns HTTPResponse.Status
 func (r ArtefactStatusCallbackLinkResponse) Status() string {
 	if r.HTTPResponse != nil {
@@ -2936,22 +2921,6 @@ func (r ArtefactStatusCallbackLinkResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r ArtefactStatusCallbackLinkResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// Status returns HTTPResponse.Status
-func (r FileStatusCallbackLinkResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r FileStatusCallbackLinkResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2981,6 +2950,35 @@ func (r AvailZoneNotifLinkResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r AvailZoneNotifLinkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type FileStatusCallbackLinkResponse struct {
+	Body                      []byte
+	HTTPResponse              *http.Response
+	ApplicationproblemJSON400 *N400
+	ApplicationproblemJSON401 *N401
+	ApplicationproblemJSON404 *N404
+	ApplicationproblemJSON409 *N409
+	ApplicationproblemJSON422 *N422
+	ApplicationproblemJSON500 *N500
+	ApplicationproblemJSON503 *N503
+	ApplicationproblemJSON520 *N520
+}
+
+// Status returns HTTPResponse.Status
+func (r FileStatusCallbackLinkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r FileStatusCallbackLinkResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -3048,7 +3046,6 @@ func (r ResourceReservationCallbackLinkResponse) StatusCode() int {
 type InstallAppResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ApplicationInstanceResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3145,18 +3142,16 @@ func (r RemoveAppResponse) StatusCode() int {
 	return 0
 }
 
-type AppInstanceDetailsJSON200Response struct {
-	// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
-	AccessPointInfo []AccessPointInfo `json:"accessPointInfo,omitempty"`
-
-	// AppInstanceState Running status of the application instance.
-	AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
-}
-
 type GetAppInstanceDetailsResponse struct {
-	Body                      []byte
-	HTTPResponse              *http.Response
-	JSON200                   *AppInstanceDetailsJSON200Response
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+		AccessPointInfo *AccessPointInfo `json:"accessPointInfo,omitempty"`
+
+		// AppInstanceState Running status of the application instance.
+		AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+	}
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3186,7 +3181,6 @@ func (r GetAppInstanceDetailsResponse) StatusCode() int {
 type OnboardApplicationResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ApplicationResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3409,7 +3403,6 @@ func (r LockUnlockApplicationZoneResponse) StatusCode() int {
 type UploadArtefactResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *ArtefactResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -3492,7 +3485,7 @@ type GetArtefactResponse struct {
 		ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 		// ArtefactVersionInfo Artefact version information
-		ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
+		ArtefactVersionInfo string               `json:"artefactVersionInfo"`
 		ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 		// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -3557,7 +3550,6 @@ func (r GetCandidateZonesResponse) StatusCode() int {
 type UploadFileResponse struct {
 	Body                      []byte
 	HTTPResponse              *http.Response
-	JSON200                   *FileResponseData
 	ApplicationproblemJSON400 *N400
 	ApplicationproblemJSON401 *N401
 	ApplicationproblemJSON404 *N404
@@ -4094,23 +4086,6 @@ func (c *ClientWithResponses) ArtefactStatusCallbackLinkWithResponse(ctx context
 	return ParseArtefactStatusCallbackLinkResponse(rsp)
 }
 
-// FileStatusCallbackLinkWithBodyWithResponse request with arbitrary body returning *FileStatusCallbackLinkResponse
-func (c *ClientWithResponses) FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
-	rsp, err := c.FileStatusCallbackLinkWithBody(ctx, federationCallbackId, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseFileStatusCallbackLinkResponse(rsp)
-}
-
-func (c *ClientWithResponses) FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
-	rsp, err := c.FileStatusCallbackLink(ctx, federationCallbackId, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseFileStatusCallbackLinkResponse(rsp)
-}
-
 // AvailZoneNotifLinkWithBodyWithResponse request with arbitrary body returning *AvailZoneNotifLinkResponse
 func (c *ClientWithResponses) AvailZoneNotifLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*AvailZoneNotifLinkResponse, error) {
 	rsp, err := c.AvailZoneNotifLinkWithBody(ctx, federationCallbackId, contentType, body, reqEditors...)
@@ -4126,6 +4101,23 @@ func (c *ClientWithResponses) AvailZoneNotifLinkWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseAvailZoneNotifLinkResponse(rsp)
+}
+
+// FileStatusCallbackLinkWithBodyWithResponse request with arbitrary body returning *FileStatusCallbackLinkResponse
+func (c *ClientWithResponses) FileStatusCallbackLinkWithBodyWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
+	rsp, err := c.FileStatusCallbackLinkWithBody(ctx, federationCallbackId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseFileStatusCallbackLinkResponse(rsp)
+}
+
+func (c *ClientWithResponses) FileStatusCallbackLinkWithResponse(ctx context.Context, federationCallbackId FederationCallbackId, body FileStatusCallbackLinkJSONRequestBody, reqEditors ...RequestEditorFn) (*FileStatusCallbackLinkResponse, error) {
+	rsp, err := c.FileStatusCallbackLink(ctx, federationCallbackId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseFileStatusCallbackLinkResponse(rsp)
 }
 
 // PartnerStatusLinkWithBodyWithResponse request with arbitrary body returning *PartnerStatusLinkResponse
@@ -4810,15 +4802,15 @@ func ParseArtefactStatusCallbackLinkResponse(rsp *http.Response) (*ArtefactStatu
 	return response, nil
 }
 
-// ParseFileStatusCallbackLinkResponse parses an HTTP response from a FileStatusCallbackLinkWithResponse call
-func ParseFileStatusCallbackLinkResponse(rsp *http.Response) (*FileStatusCallbackLinkResponse, error) {
+// ParseAvailZoneNotifLinkResponse parses an HTTP response from a AvailZoneNotifLinkWithResponse call
+func ParseAvailZoneNotifLinkResponse(rsp *http.Response) (*AvailZoneNotifLinkResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &FileStatusCallbackLinkResponse{
+	response := &AvailZoneNotifLinkResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -4885,15 +4877,15 @@ func ParseFileStatusCallbackLinkResponse(rsp *http.Response) (*FileStatusCallbac
 	return response, nil
 }
 
-// ParseAvailZoneNotifLinkResponse parses an HTTP response from a AvailZoneNotifLinkWithResponse call
-func ParseAvailZoneNotifLinkResponse(rsp *http.Response) (*AvailZoneNotifLinkResponse, error) {
+// ParseFileStatusCallbackLinkResponse parses an HTTP response from a FileStatusCallbackLinkWithResponse call
+func ParseFileStatusCallbackLinkResponse(rsp *http.Response) (*FileStatusCallbackLinkResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &AvailZoneNotifLinkResponse{
+	response := &FileStatusCallbackLinkResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -5124,12 +5116,6 @@ func ParseInstallAppResponse(rsp *http.Response) (*InstallAppResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 202:
-		var dest ApplicationInstanceResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -5374,7 +5360,13 @@ func ParseGetAppInstanceDetailsResponse(rsp *http.Response) (*GetAppInstanceDeta
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest AppInstanceDetailsJSON200Response
+		var dest struct {
+			// AccessPointInfo Information about the IP and Port exposed by the OP. Application clients shall use these access points to reach this application instance.
+			AccessPointInfo *AccessPointInfo `json:"accessPointInfo,omitempty"`
+
+			// AppInstanceState Running status of the application instance.
+			AppInstanceState *InstanceState `json:"appInstanceState,omitempty"`
+		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -5455,12 +5447,6 @@ func ParseOnboardApplicationResponse(rsp *http.Response) (*OnboardApplicationRes
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		var dest ApplicationResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -5711,8 +5697,6 @@ func ParseUpdateApplicationResponse(rsp *http.Response) (*UpdateApplicationRespo
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		return nil, nil
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -6013,9 +5997,6 @@ func ParseUploadArtefactResponse(rsp *http.Response) (*UploadArtefactResponse, e
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		return response, nil
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
@@ -6191,7 +6172,7 @@ func ParseGetArtefactResponse(rsp *http.Response) (*GetArtefactResponse, error) 
 			ArtefactRepoLocation *ObjectRepoLocation `json:"artefactRepoLocation,omitempty"`
 
 			// ArtefactVersionInfo Artefact version information
-			ArtefactVersionInfo string                                      `json:"artefactVersionInfo"`
+			ArtefactVersionInfo string               `json:"artefactVersionInfo"`
 			ArtefactVirtType    UploadArtefactMultipartBodyArtefactVirtType `json:"artefactVirtType"`
 
 			// ComponentSpec Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
@@ -6341,13 +6322,6 @@ func ParseUploadFileResponse(rsp *http.Response) (*UploadFileResponse, error) {
 	}
 
 	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && (rsp.StatusCode == 200 || rsp.StatusCode == 202):
-		var dest FileResponseData
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
 		var dest N400
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
