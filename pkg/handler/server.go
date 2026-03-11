@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -13,8 +12,6 @@ import (
 	"github.com/neonephos-katalis/opg-ewbi-api/api/federation/server"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/deployment"
 	"github.com/neonephos-katalis/opg-ewbi-api/pkg/metastore"
-	"github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
-	opgv1beta1 "github.com/neonephos-katalis/opg-ewbi-operator/api/v1beta1"
 )
 
 var _ server.ServerInterface = &handler{}
@@ -80,28 +77,14 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 			Detail: &detail,
 		})
 	}
-	var obj *opgv1beta1.ApplicationInstance
-	var err error
-	if obj, _, err = h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
+	if _, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
 		InstallAppJSONBody:  &request,
 		FederationContextID: federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.State))
-	fmt.Printf("+++++++ Application Instance response: %+v\n", string(obj.Status.AppInstanceId))
-	if obj.Status.State == "" && obj.Status.AppInstanceId == "" {
-		return c.JSON(http.StatusAccepted, models.ApplicationInstanceResponseData{
-			State:          string(v1beta1.ApplicationInstanceStatePending),
-			ZoneIdentifier: string(request.ZoneInfo.ZoneId),
-			AppInstanceId:  "",
-		})
-	}
-	return c.JSON(http.StatusOK, models.ApplicationInstanceResponseData{
-		State:          string(v1beta1.ApplicationInstanceStatePending),
-		ZoneIdentifier: string(request.ZoneInfo.ZoneId),
-		AppInstanceId:  string(obj.Status.AppInstanceId),
-	})
+
+	return c.JSON(http.StatusAccepted, nil)
 }
 
 // Terminate an application instance on a partner OP zone.
@@ -120,28 +103,8 @@ func (h *handler) GetAppInstanceDetails(c echo.Context, federationContextId mode
 	if err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	fmt.Printf("	AppInstanceState: %s\n", appInst.GetAppInstanceDetails200JSONResponse.AppInstanceState)
-	details := appInst.GetAppInstanceDetails200JSONResponse.AccessPointInfo
-	fmt.Printf("+++++++ DETAILS:\n")
-	fmt.Printf("InterfaceId: %s\n", details.InterfaceId)
-	for _, ap := range details.AccessPoints {
-		fmt.Printf("Accesspoints:\n")
-		fmt.Printf("  Port: %d\n", ap.Port)
-		fmt.Printf("  FQDN: %s\n", ap.Fqdn)
-		fmt.Printf("  IPv4: %+v\n", ap.Ipv4Addresses)
-		fmt.Printf("  IPv6: %+v\n", ap.Ipv6Addresses)
-	}
 
-	var accessPointList []models.AccessPointInfo
-	info := appInst.GetAppInstanceDetails200JSONResponse.AccessPointInfo
-	if info.InterfaceId != "" {
-		accessPointList = append(accessPointList, info)
-	}
-
-	return c.JSON(http.StatusOK, models.AppInstanceDetailsResponse{
-		AppInstanceState: appInst.GetAppInstanceDetails200JSONResponse.AppInstanceState,
-		AccessPointInfo:  accessPointList, // Passa la lista
-	})
+	return c.JSON(http.StatusOK, appInst.GetAppInstanceDetails200JSONResponse)
 }
 
 // Submits an application details to a partner OP. Based on the details provided,  partner OP shall do bookkeeping, resource validation and other pre-deployment operations.
@@ -156,27 +119,16 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 			Detail: &detail,
 		})
 	}
-	var (
-		obj *opgv1beta1.Application
-		err error
-	)
-	if obj, err = h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
+
+	if err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
 		OnboardApplicationJSONBody: &request,
 		FederationContextId:        federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		return c.JSON(http.StatusAccepted, models.ApplicationResponseData{
-			State: "Pending",
-		})
-	}
-	fmt.Printf("+++++++ Application response: %+v\n", string(obj.Status.State))
-	return c.JSON(http.StatusOK, models.ApplicationResponseData{
-		State: string(obj.Status.State),
-	})
-}
 
+	return c.JSON(http.StatusAccepted, nil)
+}
 // Deboards the application from any zones, if any, and deletes the App.
 // (GET /{federationContextId}/application/onboarding/app/{appId})
 func (h *handler) DeleteApp(c echo.Context, federationContextId models.FederationContextId, appId string) error {
@@ -218,28 +170,14 @@ func (h *handler) UploadArtefact(c echo.Context, federationContextId models.Fede
 			Detail: &detail,
 		})
 	}
-	var obj *opgv1beta1.Artefact
-	if obj, err = h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
+
+	if err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
 		UploadArtefactMultipartBody: request,
 		FederationContextId:         federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		return c.JSON(http.StatusAccepted, models.ArtefactResponseData{
-			State: "Pending"})
-	}
-	fmt.Printf("+++++++ Artefact response: %+v\n", string(obj.Status.State))
-	return c.JSON(http.StatusOK, models.ArtefactResponseData{
-		State: string(obj.Status.State)})
-}
 
-// Removes an artefact from partner OP.
-// (DELETE /{federationContextId}/artefact/{artefactId})
-func (h *handler) RemoveArtefact(c echo.Context, federationContextId models.FederationContextId, artefactId models.ArtefactId) error {
-	if err := h.metaStoreClient.RemoveArtefact(h.getRequestContextFunc(c), federationContextId, artefactId); err != nil {
-		return sendErrorResponseFromError(c, err)
-	}
 	return c.JSON(http.StatusOK, nil)
 }
 
@@ -258,7 +196,6 @@ func (h *handler) GetArtefact(c echo.Context, federationContextId models.Federat
 // (POST /{federationContextId}/files)
 func (h *handler) UploadFile(c echo.Context, federationContextId models.FederationContextId) error {
 	ctx := h.getRequestContextFunc(c)
-
 	request, err := models.NewUploadFileMultipartBody(c)
 	if err != nil {
 		detail := err.Error()
@@ -267,22 +204,14 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 		})
 	}
 
-	var obj *opgv1beta1.File
-	if obj, err = h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
+	if err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
 		UploadFileMultipartBody: request,
 		FederationContextId:     federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
-	if strings.TrimSpace(string(obj.Status.State)) == "" || strings.TrimSpace(string(obj.Status.State)) == "Pending" {
-		return c.JSON(http.StatusAccepted, models.FileResponseData{
-			State: "Pending",
-		})
-	}
-	fmt.Printf("+++++++ File response: %+v\n", string(obj.Status.State))
-	return c.JSON(http.StatusOK, models.FileResponseData{
-		State: string(obj.Status.State),
-	})
+
+	return c.JSON(http.StatusOK, nil)
 }
 
 // Removes an image file from partner OP.

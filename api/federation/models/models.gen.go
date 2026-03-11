@@ -739,7 +739,7 @@ type InvalidParam struct {
 type Ipv4Addr = string
 
 // Ipv6Addr defines model for Ipv6Addr.
-type Ipv6Addr = interface{}
+type Ipv6Addr = string
 
 // Mcc defines model for Mcc.
 type Mcc = string
