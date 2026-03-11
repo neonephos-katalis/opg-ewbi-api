@@ -3544,12 +3544,9 @@ paths:
             schema:
               type: object
               required:
-                - federationContextId
                 - appId
                 - statusInfo
               properties:
-                federationContextId:
-                  $ref: "#/components/schemas/FederationContextId"
                 appId:
                   $ref: "#/components/schemas/AppIdentifier"
                 statusInfo:
@@ -3609,16 +3606,13 @@ paths:
             schema:
               type: object
               required:
-                - federationContextId
                 - artefactId
                 - updateStatus
               properties:
-                federationContextId:
-                  $ref: "#/components/schemas/FederationContextId"
                 artefactId:
                   $ref: "#/components/schemas/ArtefactId"
                 updateStatus:
-                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  description: Defines change in artefact status. This change could be related to the artefact itself or an artefact instance status
                   type: string
                   enum:
                     - Pending
@@ -3662,16 +3656,13 @@ paths:
             schema:
               type: object
               required:
-                - federationContextId
                 - fileId
                 - updateStatus
               properties:
-                federationContextId:
-                  $ref: "#/components/schemas/FederationContextId"
                 fileId:
                   $ref: "#/components/schemas/FileId"
                 updateStatus:
-                  description: Defines change in application status. This change could be related to application itself or an application instance status
+                  description: Defines change in file status. This change could be related to the file itself or a file instance status
                   type: string
                   enum:
                     - Pending
@@ -3680,7 +3671,7 @@ paths:
                     - Unknown
       responses:
         "204":
-          description: Artefact status updated
+          description: File status updated
         "400":
           $ref: "#/components/responses/400"
         "401":
@@ -3715,14 +3706,11 @@ paths:
             schema:
               type: object
               required:
-                - federationContextId
                 - appId
                 - appInstanceId
                 - zoneId
                 - appInstanceInfo
               properties:
-                federationContextId:
-                  $ref: "#/components/schemas/FederationContextId"
                 appId:
                   $ref: "#/components/schemas/AppIdentifier"
                 appInstanceId:
