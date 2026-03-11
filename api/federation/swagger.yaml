@@ -282,9 +282,9 @@ components:
           - accessPoints
         properties:
           interfaceId:
-            $ref: '#/components/schemas/InterfaceId'
+            $ref: "#/components/schemas/InterfaceId"
           accessPoints:
-            $ref: '#/components/schemas/ServiceEndpoint'
+            $ref: "#/components/schemas/ServiceEndpoint"
       minItems: 1
     AppComponentSpecs:
       description: An application may consist of more than one component. Each component is associated with a descriptor and may exposes its services externally or internally. App providers are required to provide details about all these components, their associated descriptors and their DNS names.
@@ -307,7 +307,7 @@ components:
             pattern: ^[a-z0-9]([-a-z0-9]{0,62}[a-z0-9])?$
             description: Must be a valid RFC 1123 label name. Component name must be unique with an application
           artefactId:
-            $ref: '#/components/schemas/ArtefactId'
+            $ref: "#/components/schemas/ArtefactId"
       minItems: 1
     AppMetaData:
       description: Application metadata details
@@ -397,7 +397,7 @@ components:
         - clientSecret
       properties:
         tokenUrl:
-          $ref: '#/components/schemas/Uri'
+          $ref: "#/components/schemas/Uri"
           description: Oauth2 token endpoint.
         clientId:
           type: string
@@ -410,7 +410,7 @@ components:
       minProperties: 1
       properties:
         geo_location:
-          $ref: '#/components/schemas/GeoLocation'
+          $ref: "#/components/schemas/GeoLocation"
         rad_location:
           description: Information about the 4G/5G Cell ids where the client is currently served.
           type: array
@@ -520,7 +520,7 @@ components:
           description: List of all images associated with the component. Images are specified using the file identifiers. Partner OP provides these images using file upload api.
           type: array
           items:
-            $ref: '#/components/schemas/FileId'
+            $ref: "#/components/schemas/FileId"
           minItems: 1
         numOfInstances:
           type: integer
@@ -533,26 +533,26 @@ components:
             - RESTART_POLICY_NEVER
           description: How the platform shall handle component failure
         commandLineParams:
-          $ref: '#/components/schemas/CommandLineParams'
+          $ref: "#/components/schemas/CommandLineParams"
         exposedInterfaces:
           description: Each application component exposes some ports either for external users or for inter component communication. Application provider is required to specify which ports are to be exposed and the type of traffic that will flow through these ports.
           type: array
           items:
-            $ref: '#/components/schemas/InterfaceDetails'
+            $ref: "#/components/schemas/InterfaceDetails"
           minItems: 1
         computeResourceProfile:
-          $ref: '#/components/schemas/ComputeResourceInfo'
+          $ref: "#/components/schemas/ComputeResourceInfo"
         compEnvParams:
           type: array
           items:
-            $ref: '#/components/schemas/CompEnvParams'
+            $ref: "#/components/schemas/CompEnvParams"
         deploymentConfig:
-          $ref: '#/components/schemas/DeploymentConfig'
+          $ref: "#/components/schemas/DeploymentConfig"
         persistentVolumes:
           description: The ephemeral volume a container process may need to temporary store internal data
           type: array
           items:
-            $ref: '#/components/schemas/PersistentVolumeDetails'
+            $ref: "#/components/schemas/PersistentVolumeDetails"
           minItems: 1
     ComputeResourceInfo:
       type: object
@@ -568,7 +568,7 @@ components:
             - ISA_ARM_64
           description: CPU Instruction Set Architecture (ISA) E.g., Intel, Arm etc.
         numCPU:
-          $ref: '#/components/schemas/Vcpu'
+          $ref: "#/components/schemas/Vcpu"
         memory:
           type: integer
           format: int64
@@ -580,7 +580,7 @@ components:
         gpu:
           type: array
           items:
-            $ref: '#/components/schemas/GpuInfo'
+            $ref: "#/components/schemas/GpuInfo"
         vpu:
           type: integer
           description: Number of Intel VPUs available for a given ISA type
@@ -590,7 +590,7 @@ components:
         hugepages:
           type: array
           items:
-            $ref: '#/components/schemas/HugePage'
+            $ref: "#/components/schemas/HugePage"
         cpuExclusivity:
           type: boolean
           description: Support for exclusive CPUs
@@ -603,9 +603,9 @@ components:
           - latencyServiceEndPoints
         properties:
           zoneId:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
           latencyServiceEndPoints:
-            $ref: '#/components/schemas/ServiceEndpoint'
+            $ref: "#/components/schemas/ServiceEndpoint"
       minItems: 1
       description: List of candidate zones where application instance could be created. LatencyServiceEndpoint is responsible for responding to latency measurement request from client
     FederationRequestData:
@@ -616,21 +616,21 @@ components:
         - partnerStatusLink
       properties:
         origOPFederationId:
-          $ref: '#/components/schemas/FederationIdentifier'
+          $ref: "#/components/schemas/FederationIdentifier"
         origOPCountryCode:
-          $ref: '#/components/schemas/CountryCode'
+          $ref: "#/components/schemas/CountryCode"
         origOPMobileNetworkCodes:
-          $ref: '#/components/schemas/MobileNetworkIds'
+          $ref: "#/components/schemas/MobileNetworkIds"
         origOPFixedNetworkCodes:
-          $ref: '#/components/schemas/FixedNetworkIds'
+          $ref: "#/components/schemas/FixedNetworkIds"
         initialDate:
           type: string
           format: date-time
           description: Time zone info of the federation initiated by the originating OP
         partnerStatusLink:
-          $ref: '#/components/schemas/Uri'
+          $ref: "#/components/schemas/Uri"
         partnerCallbackCredentials:
-          $ref: '#/components/schemas/CallbackCredentials'
+          $ref: "#/components/schemas/CallbackCredentials"
     FederationResponseData:
       type: object
       required:
@@ -639,23 +639,23 @@ components:
         - platformCaps
       properties:
         partnerOPFederationId:
-          $ref: '#/components/schemas/FederationIdentifier'
+          $ref: "#/components/schemas/FederationIdentifier"
         partnerOPCountryCode:
-          $ref: '#/components/schemas/CountryCode'
+          $ref: "#/components/schemas/CountryCode"
         federationContextId:
-          $ref: '#/components/schemas/FederationContextId'
+          $ref: "#/components/schemas/FederationContextId"
         edgeDiscoveryServiceEndPoint:
-          $ref: '#/components/schemas/ServiceEndpoint'
+          $ref: "#/components/schemas/ServiceEndpoint"
         lcmServiceEndPoint:
-          $ref: '#/components/schemas/ServiceEndpoint'
+          $ref: "#/components/schemas/ServiceEndpoint"
         partnerOPMobileNetworkCodes:
-          $ref: '#/components/schemas/MobileNetworkIds'
+          $ref: "#/components/schemas/MobileNetworkIds"
         partnerOPFixedNetworkCodes:
-          $ref: '#/components/schemas/FixedNetworkIds'
+          $ref: "#/components/schemas/FixedNetworkIds"
         offeredAvailabilityZones:
           type: array
           items:
-            $ref: '#/components/schemas/ZoneDetails'
+            $ref: "#/components/schemas/ZoneDetails"
           minItems: 1
           description: List of zones, which the operator platform wishes to make available to developers/ISVs of requesting operator platform.
         platformCaps:
@@ -677,14 +677,14 @@ components:
         - storageSize
       properties:
         flavourId:
-          $ref: '#/components/schemas/FlavourId'
+          $ref: "#/components/schemas/FlavourId"
         cpuArchType:
-          $ref: '#/components/schemas/CPUArchType'
+          $ref: "#/components/schemas/CPUArchType"
         supportedOSTypes:
           description: A list of operating systems which this flavour configuration can support e.g., RHEL Linux, Ubuntu 18.04 LTS, MS Windows 2012 R2.
           type: array
           items:
-            $ref: '#/components/schemas/OSType'
+            $ref: "#/components/schemas/OSType"
           minItems: 1
         numCPU:
           type: integer
@@ -701,7 +701,7 @@ components:
         gpu:
           type: array
           items:
-            $ref: '#/components/schemas/GpuInfo'
+            $ref: "#/components/schemas/GpuInfo"
         fpga:
           type: integer
           format: int32
@@ -712,7 +712,7 @@ components:
         hugepages:
           type: array
           items:
-            $ref: '#/components/schemas/HugePage'
+            $ref: "#/components/schemas/HugePage"
         cpuExclusivity:
           type: boolean
           description: Support for exclusive CPUs
@@ -765,7 +765,7 @@ components:
         - visibilityType
       properties:
         interfaceId:
-          $ref: '#/components/schemas/InterfaceId'
+          $ref: "#/components/schemas/InterfaceId"
         commProtocol:
           type: string
           enum:
@@ -806,17 +806,17 @@ components:
       type: object
       properties:
         mcc:
-          $ref: '#/components/schemas/Mcc'
+          $ref: "#/components/schemas/Mcc"
         mncs:
           type: array
           items:
-            $ref: '#/components/schemas/Mnc'
+            $ref: "#/components/schemas/Mnc"
           minItems: 1
     ObjectRepoLocation:
       type: object
       properties:
         repoURL:
-          $ref: '#/components/schemas/Uri'
+          $ref: "#/components/schemas/Uri"
         userName:
           type: string
           description: Username to access the repository
@@ -916,7 +916,7 @@ components:
         invalidParams:
           type: array
           items:
-            $ref: '#/components/schemas/InvalidParam'
+            $ref: "#/components/schemas/InvalidParam"
           minItems: 1
     ResourceReservationDuration:
       description: Time period for which resources are to be reserved starting from now
@@ -948,18 +948,18 @@ components:
             - ipv6Addresses
       properties:
         port:
-          $ref: '#/components/schemas/Port'
+          $ref: "#/components/schemas/Port"
         fqdn:
-          $ref: '#/components/schemas/Fqdn'
+          $ref: "#/components/schemas/Fqdn"
         ipv4Addresses:
           type: array
           items:
-            $ref: '#/components/schemas/Ipv4Addr'
+            $ref: "#/components/schemas/Ipv4Addr"
           minItems: 1
         ipv6Addresses:
           type: array
           items:
-            $ref: '#/components/schemas/Ipv6Addr'
+            $ref: "#/components/schemas/Ipv6Addr"
           minItems: 1
     ZoneDetails:
       type: object
@@ -969,9 +969,9 @@ components:
         - geographyDetails
       properties:
         zoneId:
-          $ref: '#/components/schemas/ZoneIdentifier'
+          $ref: "#/components/schemas/ZoneIdentifier"
         geolocation:
-          $ref: '#/components/schemas/GeoLocation'
+          $ref: "#/components/schemas/GeoLocation"
         geographyDetails:
           type: string
           description: Details about cities or state covered by the edge. Details about the type of locality for eg rural, urban, industrial etc. This information is defined in human readable form.
@@ -984,10 +984,10 @@ components:
         acceptedAvailabilityZones:
           type: array
           items:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
           minItems: 1
         availZoneNotifLink:
-          $ref: '#/components/schemas/Uri'
+          $ref: "#/components/schemas/Uri"
     ZoneRegistrationResponseData:
       type: object
       required:
@@ -996,7 +996,7 @@ components:
         acceptedZoneResourceInfo:
           type: array
           items:
-            $ref: '#/components/schemas/ZoneRegisteredData'
+            $ref: "#/components/schemas/ZoneRegisteredData"
           minItems: 1
     ZoneRegisteredData:
       type: object
@@ -1007,23 +1007,23 @@ components:
         - flavoursSupported
       properties:
         zoneId:
-          $ref: '#/components/schemas/ZoneIdentifier'
+          $ref: "#/components/schemas/ZoneIdentifier"
         reservedComputeResources:
           description: Resources exclusively reserved for the originator OP.
           type: array
           items:
-            $ref: '#/components/schemas/ComputeResourceInfo'
+            $ref: "#/components/schemas/ComputeResourceInfo"
           minItems: 1
         computeResourceQuotaLimits:
           description: Max quota on resources partner OP allows over reserved resources.
           type: array
           items:
-            $ref: '#/components/schemas/ComputeResourceInfo'
+            $ref: "#/components/schemas/ComputeResourceInfo"
           minItems: 1
         flavoursSupported:
           type: array
           items:
-            $ref: '#/components/schemas/Flavour'
+            $ref: "#/components/schemas/Flavour"
           minItems: 1
         networkResources:
           type: object
@@ -1053,61 +1053,61 @@ components:
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "401":
       description: Unauthorized
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "404":
       description: Not Found
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "409":
       description: Conflict
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "412":
       description: Precondition Failed
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "422":
       description: Unprocessable Entity
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "500":
       description: Internal Server Error
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "501":
       description: Not Implemented
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "503":
       description: Service Unavailable
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     "520":
       description: Web Server Returned an Unknown Error
       content:
         application/problem+json:
           schema:
-            $ref: '#/components/schemas/ProblemDetails'
+            $ref: "#/components/schemas/ProblemDetails"
     default:
       description: Generic Error
 paths:
@@ -1122,17 +1122,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FederationRequestData'
+              $ref: "#/components/schemas/FederationRequestData"
       responses:
         "200":
           description: Federation meta-info request accepted
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FederationResponseData'
+                $ref: "#/components/schemas/FederationResponseData"
           headers:
             Location:
-              description: 'Contains the URI of the newly created resource, according to the structure: {apiRoot}/operatorplatform/federation/v1/partner/{federationContextId}'
+              description: "Contains the URI of the newly created resource, according to the structure: {apiRoot}/operatorplatform/federation/v1/partner/{federationContextId}"
               required: true
               schema:
                 type: string
@@ -1145,26 +1145,26 @@ paths:
               schema:
                 type: string
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
       callbacks:
         onPartnerStatusEvent:
-          '{$request.body#/partnerStatusLink}':
+          "{$request.body#/partnerStatusLink}":
             post:
               requestBody:
                 description: |
@@ -1190,7 +1190,7 @@ paths:
                         - modificationDate
                       properties:
                         federationContextId:
-                          $ref: '#/components/schemas/FederationContextId'
+                          $ref: "#/components/schemas/FederationContextId"
                         objectType:
                           type: string
                           enum:
@@ -1208,27 +1208,27 @@ paths:
                             - ADD
                             - REMOVE
                         edgeDiscoverySvcEndPoint:
-                          $ref: '#/components/schemas/ServiceEndpoint'
+                          $ref: "#/components/schemas/ServiceEndpoint"
                         lcmSvcEndPoint:
-                          $ref: '#/components/schemas/ServiceEndpoint'
+                          $ref: "#/components/schemas/ServiceEndpoint"
                         addMobileNetworkIds:
-                          $ref: '#/components/schemas/MobileNetworkIds'
+                          $ref: "#/components/schemas/MobileNetworkIds"
                         removeMobileNetworkIds:
-                          $ref: '#/components/schemas/MobileNetworkIds'
+                          $ref: "#/components/schemas/MobileNetworkIds"
                         addFixedNetworkIds:
-                          $ref: '#/components/schemas/FixedNetworkIds'
+                          $ref: "#/components/schemas/FixedNetworkIds"
                         removeFixedNetworkIds:
-                          $ref: '#/components/schemas/FixedNetworkIds'
+                          $ref: "#/components/schemas/FixedNetworkIds"
                         addZones:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ZoneDetails'
+                            $ref: "#/components/schemas/ZoneDetails"
                           description: List of zones, which the operator platform wishes to make available to developers/ISVs of requesting operator platform.
                           minItems: 1
                         removeZones:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ZoneIdentifier'
+                            $ref: "#/components/schemas/ZoneIdentifier"
                           description: List of zones, which the operator platform no longer wishes to share.
                           minItems: 1
                         zoneStatus:
@@ -1240,12 +1240,12 @@ paths:
                               - status
                             properties:
                               zoneId:
-                                $ref: '#/components/schemas/ZoneIdentifier'
+                                $ref: "#/components/schemas/ZoneIdentifier"
                               status:
-                                $ref: '#/components/schemas/Status'
+                                $ref: "#/components/schemas/Status"
                           minItems: 1
                         federationStatus:
-                          $ref: '#/components/schemas/Status'
+                          $ref: "#/components/schemas/Status"
                         modificationDate:
                           type: string
                           format: date-time
@@ -1254,23 +1254,23 @@ paths:
                 "204":
                   description: Expected response to a successful call back processing
                 "400":
-                  $ref: '#/components/responses/400'
+                  $ref: "#/components/responses/400"
                 "401":
-                  $ref: '#/components/responses/401'
+                  $ref: "#/components/responses/401"
                 "404":
-                  $ref: '#/components/responses/404'
+                  $ref: "#/components/responses/404"
                 "409":
-                  $ref: '#/components/responses/409'
+                  $ref: "#/components/responses/409"
                 "422":
-                  $ref: '#/components/responses/422'
+                  $ref: "#/components/responses/422"
                 "500":
-                  $ref: '#/components/responses/500'
+                  $ref: "#/components/responses/500"
                 "503":
-                  $ref: '#/components/responses/503'
+                  $ref: "#/components/responses/503"
                 "520":
-                  $ref: '#/components/responses/520'
+                  $ref: "#/components/responses/520"
                 default:
-                  $ref: '#/components/responses/default'
+                  $ref: "#/components/responses/default"
   /{federationContextId}/partner:
     get:
       summary: Retrieves details about the federation context with the partner OP. The response shall provide info about the zones offered by the partner, partner OP network codes, information about edge discovery and LCM service etc.
@@ -1282,7 +1282,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       responses:
         "200":
           description: Federation meta-info request accepted
@@ -1295,36 +1295,36 @@ paths:
                   - lcmServiceEndPoint
                 properties:
                   edgeDiscoveryServiceEndPoint:
-                    $ref: '#/components/schemas/ServiceEndpoint'
+                    $ref: "#/components/schemas/ServiceEndpoint"
                   lcmServiceEndPoint:
-                    $ref: '#/components/schemas/ServiceEndpoint'
+                    $ref: "#/components/schemas/ServiceEndpoint"
                   allowedMobileNetworkIds:
-                    $ref: '#/components/schemas/MobileNetworkIds'
+                    $ref: "#/components/schemas/MobileNetworkIds"
                   allowedFixedNetworkIds:
-                    $ref: '#/components/schemas/FixedNetworkIds'
+                    $ref: "#/components/schemas/FixedNetworkIds"
                   offeredAvailabilityZones:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ZoneDetails'
+                      $ref: "#/components/schemas/ZoneDetails"
                     minItems: 1
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     patch:
       summary: API used by the Originating OP towards the partner OP, to update the parameters associated to the existing federation
       operationId: UpdateFederation
@@ -1335,7 +1335,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         required: true
         description: Details about changes origination OP wished to apply
@@ -1360,13 +1360,13 @@ paths:
                     - REMOVE_CODES
                     - UPDATE_CODES
                 addMobileNetworkIds:
-                  $ref: '#/components/schemas/MobileNetworkIds'
+                  $ref: "#/components/schemas/MobileNetworkIds"
                 removeMobileNetworkIds:
-                  $ref: '#/components/schemas/MobileNetworkIds'
+                  $ref: "#/components/schemas/MobileNetworkIds"
                 addFixedNetworkIds:
-                  $ref: '#/components/schemas/FixedNetworkIds'
+                  $ref: "#/components/schemas/FixedNetworkIds"
                 removeFixedNetworkIds:
-                  $ref: '#/components/schemas/FixedNetworkIds'
+                  $ref: "#/components/schemas/FixedNetworkIds"
                 modificationDate:
                   type: string
                   format: date-time
@@ -1383,36 +1383,36 @@ paths:
                   - lcmServiceEndPoint
                 properties:
                   edgeDiscoveryServiceEndPoint:
-                    $ref: '#/components/schemas/ServiceEndpoint'
+                    $ref: "#/components/schemas/ServiceEndpoint"
                   lcmServiceEndPoint:
-                    $ref: '#/components/schemas/ServiceEndpoint'
+                    $ref: "#/components/schemas/ServiceEndpoint"
                   allowedMobileNetworkIds:
-                    $ref: '#/components/schemas/MobileNetworkIds'
+                    $ref: "#/components/schemas/MobileNetworkIds"
                   allowedFixedNetworkIds:
-                    $ref: '#/components/schemas/FixedNetworkIds'
+                    $ref: "#/components/schemas/FixedNetworkIds"
                   offeredAvailabilityZones:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ZoneDetails'
+                      $ref: "#/components/schemas/ZoneDetails"
                     minItems: 1
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     delete:
       summary: Remove existing federation with the partner OP
       operationId: DeleteFederationDetails
@@ -1423,28 +1423,28 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       responses:
         "200":
           description: Federation removed successfully
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/zones:
     post:
       summary: Originating OP informs partner OP that it is willing to access the specified zones and partner OP shall reserve compute and network resources for these zones.
@@ -1456,12 +1456,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ZoneRegistrationRequestData'
+              $ref: "#/components/schemas/ZoneRegistrationRequestData"
         required: true
       responses:
         "200":
@@ -1469,28 +1469,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZoneRegistrationResponseData'
+                $ref: "#/components/schemas/ZoneRegistrationResponseData"
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
       callbacks:
         onZoneResourceUpdateEvent:
-          '{$request.body#/availZoneNotifLink}':
+          "{$request.body#/availZoneNotifLink}":
             post:
               requestBody:
                 description: Notification about resource availability.
@@ -1504,9 +1504,9 @@ paths:
                         - zoneResUpdInfo
                       properties:
                         federationContextId:
-                          $ref: '#/components/schemas/FederationContextId'
+                          $ref: "#/components/schemas/FederationContextId"
                         zoneId:
-                          $ref: '#/components/schemas/ZoneIdentifier'
+                          $ref: "#/components/schemas/ZoneIdentifier"
                         zoneResUpdInfo:
                           type: array
                           items:
@@ -1517,7 +1517,7 @@ paths:
                                 description: Resources exclusively reserved for the originator OP.
                                 type: array
                                 items:
-                                  $ref: '#/components/schemas/ComputeResourceInfo'
+                                  $ref: "#/components/schemas/ComputeResourceInfo"
                                 minItems: 1
                               availableNetResources:
                                 type: object
@@ -1540,23 +1540,23 @@ paths:
                 "200":
                   description: Zone info notification acknowledged
                 "400":
-                  $ref: '#/components/responses/400'
+                  $ref: "#/components/responses/400"
                 "401":
-                  $ref: '#/components/responses/401'
+                  $ref: "#/components/responses/401"
                 "404":
-                  $ref: '#/components/responses/404'
+                  $ref: "#/components/responses/404"
                 "409":
-                  $ref: '#/components/responses/409'
+                  $ref: "#/components/responses/409"
                 "422":
-                  $ref: '#/components/responses/422'
+                  $ref: "#/components/responses/422"
                 "500":
-                  $ref: '#/components/responses/500'
+                  $ref: "#/components/responses/500"
                 "503":
-                  $ref: '#/components/responses/503'
+                  $ref: "#/components/responses/503"
                 "520":
-                  $ref: '#/components/responses/520'
+                  $ref: "#/components/responses/520"
                 default:
-                  $ref: '#/components/responses/default'
+                  $ref: "#/components/responses/default"
   /{federationContextId}/zones/{zoneId}:
     delete:
       summary: Assert usage of a partner OP zone. Originating OP informs partner OP that it will no longer access the specified zone.
@@ -1568,33 +1568,33 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
       responses:
         "200":
           description: Zone deregistered successfully
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     get:
       summary: Retrieves details about the computation and network resources that partner OP has reserved for this zone.
       operationId: GetZoneData
@@ -1605,37 +1605,37 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
       responses:
         "200":
           description: Zone metadata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ZoneRegisteredData'
+                $ref: "#/components/schemas/ZoneRegisteredData"
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/artefact:
     post:
       summary: Uploads application artefact on partner OP. Artefact is a zip file containing scripts and/or packaging files like Terraform or Helm which are required to create an instance of an application.
@@ -1647,7 +1647,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         description: An application can consist of multiple components. App providers are allowed to define separate artefacts for each component or they could define a consolidated artefact at application level.
         content:
@@ -1664,11 +1664,11 @@ paths:
                 - componentSpec
               properties:
                 artefactId:
-                  $ref: '#/components/schemas/ArtefactId'
+                  $ref: "#/components/schemas/ArtefactId"
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 artefactName:
-                  $ref: '#/components/schemas/ArtefactName'
+                  $ref: "#/components/schemas/ArtefactName"
                 artefactVersionInfo:
                   type: string
                   description: Artefact version information
@@ -1711,7 +1711,7 @@ paths:
                     - UPLOAD
                   description: Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
                 artefactRepoLocation:
-                  $ref: '#/components/schemas/ObjectRepoLocation'
+                  $ref: "#/components/schemas/ObjectRepoLocation"
                 artefactFile:
                   type: string
                   format: binary
@@ -1720,30 +1720,30 @@ paths:
                   description: Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
                   type: array
                   items:
-                    $ref: '#/components/schemas/ComponentSpec'
+                    $ref: "#/components/schemas/ComponentSpec"
                   minItems: 1
         required: true
       responses:
         "200":
           description: Artefact uploaded successfully
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/artefact/{artefactId}:
     get:
       summary: Retrieves details about an artefact.
@@ -1755,12 +1755,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: artefactId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ArtefactId'
+            $ref: "#/components/schemas/ArtefactId"
       responses:
         "200":
           description: Artefact details
@@ -1777,11 +1777,11 @@ paths:
                   - artefactDescriptorType
                 properties:
                   artefactId:
-                    $ref: '#/components/schemas/ArtefactId'
+                    $ref: "#/components/schemas/ArtefactId"
                   appProviderId:
-                    $ref: '#/components/schemas/AppProviderId'
+                    $ref: "#/components/schemas/AppProviderId"
                   artefactName:
-                    $ref: '#/components/schemas/ArtefactName'
+                    $ref: "#/components/schemas/ArtefactName"
                   artefactDescription:
                     type: string
                     maxLength: 256
@@ -1824,31 +1824,31 @@ paths:
                       - UPLOAD
                     description: Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
                   artefactRepoLocation:
-                    $ref: '#/components/schemas/ObjectRepoLocation'
+                    $ref: "#/components/schemas/ObjectRepoLocation"
                   componentSpec:
                     description: Details about compute, networking and storage requirements for each component of the application. App provider should define all information needed to instantiate the component. If artefact is being defined at component level this section should have information just about the component. In case the artefact is being defined at application level the section should provide details about all the components.
                     type: array
                     items:
-                      $ref: '#/components/schemas/ComponentSpec'
+                      $ref: "#/components/schemas/ComponentSpec"
                     minItems: 1
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     delete:
       summary: Removes an artefact from partner OP.
       operationId: RemoveArtefact
@@ -1859,33 +1859,33 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: artefactId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ArtefactId'
+            $ref: "#/components/schemas/ArtefactId"
       responses:
         "200":
           description: Artefact deletion successful
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/files:
     post:
       summary: Uploads an image file. Originating OP uses this api to onboard an application image to partner OP.
@@ -1897,7 +1897,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         content:
           multipart/form-data:
@@ -1913,11 +1913,11 @@ paths:
                 - imgInsSetArch
               properties:
                 fileId:
-                  $ref: '#/components/schemas/FileId'
+                  $ref: "#/components/schemas/FileId"
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 fileName:
-                  $ref: '#/components/schemas/FileName'
+                  $ref: "#/components/schemas/FileName"
                 fileDescription:
                   type: string
                   minLength: 8
@@ -1927,14 +1927,14 @@ paths:
                   type: string
                   description: File version information
                 fileType:
-                  $ref: '#/components/schemas/VirtImageType'
+                  $ref: "#/components/schemas/VirtImageType"
                 checksum:
                   type: string
                   description: MD5 checksum for VM and file-based images, sha256 digest for containers
                 imgOSType:
-                  $ref: '#/components/schemas/OSType'
+                  $ref: "#/components/schemas/OSType"
                 imgInsSetArch:
-                  $ref: '#/components/schemas/CPUArchType'
+                  $ref: "#/components/schemas/CPUArchType"
                 repoType:
                   type: string
                   enum:
@@ -1943,7 +1943,7 @@ paths:
                     - UPLOAD
                   description: Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
                 fileRepoLocation:
-                  $ref: '#/components/schemas/ObjectRepoLocation'
+                  $ref: "#/components/schemas/ObjectRepoLocation"
                 file:
                   type: string
                   format: binary
@@ -1953,23 +1953,23 @@ paths:
         "200":
           description: File uploaded successfully
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/files/{fileId}:
     delete:
       summary: Removes an image file from partner OP.
@@ -1981,33 +1981,33 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: fileId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FileId'
+            $ref: "#/components/schemas/FileId"
       responses:
         "200":
           description: Image deletion successful
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     get:
       summary: View an image file from partner OP.
       operationId: ViewFile
@@ -2018,12 +2018,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: fileId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FileId'
+            $ref: "#/components/schemas/FileId"
       responses:
         "200":
           description: Image details
@@ -2041,11 +2041,11 @@ paths:
                   - imgInsSetArch
                 properties:
                   fileId:
-                    $ref: '#/components/schemas/FileId'
+                    $ref: "#/components/schemas/FileId"
                   appProviderId:
-                    $ref: '#/components/schemas/AppProviderId'
+                    $ref: "#/components/schemas/AppProviderId"
                   fileName:
-                    $ref: '#/components/schemas/FileName'
+                    $ref: "#/components/schemas/FileName"
                   fileDescription:
                     type: string
                     minLength: 8
@@ -2055,14 +2055,14 @@ paths:
                     type: string
                     description: File version information
                   fileType:
-                    $ref: '#/components/schemas/VirtImageType'
+                    $ref: "#/components/schemas/VirtImageType"
                   checksum:
                     type: string
                     description: MD5 checksum for VM and file-based images, sha256 digest for containers
                   imgOSType:
-                    $ref: '#/components/schemas/OSType'
+                    $ref: "#/components/schemas/OSType"
                   imgInsSetArch:
-                    $ref: '#/components/schemas/CPUArchType'
+                    $ref: "#/components/schemas/CPUArchType"
                   repoType:
                     type: string
                     enum:
@@ -2071,25 +2071,25 @@ paths:
                       - UPLOAD
                     description: Artefact or file repository location. PUBLICREPO is used of public URLs like GitHub, Helm repo, docker registry etc., PRIVATEREPO is used for private repo managed by the application developer, UPLOAD is for the case when artefact/file is uploaded from MEC web portal. OP should pull the image from ‘repoUrl' immediately after receiving the request and then send back the response. In case the repoURL corresponds to a docker registry, use docker v2 http api to do the pull.
                   fileRepoLocation:
-                    $ref: '#/components/schemas/ObjectRepoLocation'
+                    $ref: "#/components/schemas/ObjectRepoLocation"
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/onboarding:
     post:
       summary: Submits an application details to a partner OP. Based on the details provided,  partner OP shall do bookkeeping, resource validation and other pre-deployment operations.
@@ -2101,7 +2101,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         required: true
         description: Details about application compute resource requirements, associated artefacts, QoS profile and regions where application shall be made available etc.
@@ -2118,47 +2118,47 @@ paths:
                 - appStatusCallbackLink
               properties:
                 appId:
-                  $ref: '#/components/schemas/AppIdentifier'
+                  $ref: "#/components/schemas/AppIdentifier"
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 appDeploymentZones:
                   description: Details about partner OP zones where the application should be made available;  This field when specified will instruct the OP to restrict application instantiation only on the listed zones.
                   type: array
                   items:
-                    $ref: '#/components/schemas/ZoneIdentifier'
+                    $ref: "#/components/schemas/ZoneIdentifier"
                   minItems: 1
                 appMetaData:
-                  $ref: '#/components/schemas/AppMetaData'
+                  $ref: "#/components/schemas/AppMetaData"
                 appQoSProfile:
-                  $ref: '#/components/schemas/AppQoSProfile'
+                  $ref: "#/components/schemas/AppQoSProfile"
                 appComponentSpecs:
-                  $ref: '#/components/schemas/AppComponentSpecs'
+                  $ref: "#/components/schemas/AppComponentSpecs"
                 appStatusCallbackLink:
-                  $ref: '#/components/schemas/Uri'
+                  $ref: "#/components/schemas/Uri"
       responses:
         "202":
           description: Application onboarded request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
       callbacks:
         onApplicationOnboardStatusEvent:
-          '{$request.body#/appStatusCallbackLink}':
+          "{$request.body#/appStatusCallbackLink}":
             post:
               requestBody:
                 description: Notification payload.
@@ -2172,9 +2172,9 @@ paths:
                         - statusInfo
                       properties:
                         federationContextId:
-                          $ref: '#/components/schemas/FederationContextId'
+                          $ref: "#/components/schemas/FederationContextId"
                         appId:
-                          $ref: '#/components/schemas/AppIdentifier'
+                          $ref: "#/components/schemas/AppIdentifier"
                         statusInfo:
                           type: array
                           items:
@@ -2184,7 +2184,7 @@ paths:
                               - onboardStatusInfo
                             properties:
                               zoneId:
-                                $ref: '#/components/schemas/ZoneIdentifier'
+                                $ref: "#/components/schemas/ZoneIdentifier"
                               onboardStatusInfo:
                                 description: Defines change in application status. This change could be related to application itself or an application instance status
                                 type: string
@@ -2199,23 +2199,23 @@ paths:
                 "204":
                   description: Application status updated
                 "400":
-                  $ref: '#/components/responses/400'
+                  $ref: "#/components/responses/400"
                 "401":
-                  $ref: '#/components/responses/401'
+                  $ref: "#/components/responses/401"
                 "404":
-                  $ref: '#/components/responses/404'
+                  $ref: "#/components/responses/404"
                 "409":
-                  $ref: '#/components/responses/409'
+                  $ref: "#/components/responses/409"
                 "422":
-                  $ref: '#/components/responses/422'
+                  $ref: "#/components/responses/422"
                 "500":
-                  $ref: '#/components/responses/500'
+                  $ref: "#/components/responses/500"
                 "503":
-                  $ref: '#/components/responses/503'
+                  $ref: "#/components/responses/503"
                 "520":
-                  $ref: '#/components/responses/520'
+                  $ref: "#/components/responses/520"
                 default:
-                  $ref: '#/components/responses/default'
+                  $ref: "#/components/responses/default"
   /{federationContextId}/application/onboarding/app/{appId}:
     delete:
       summary: Deboards the application from any zones, if any, and deletes the App.
@@ -2227,33 +2227,33 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
       responses:
-        '200':
+        "200":
           description: App deletion successful
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '409':
-          $ref: '#/components/responses/409'
-        '422':
-          $ref: '#/components/responses/422'
-        '500':
-          $ref: '#/components/responses/500'
-        '503':
-          $ref: '#/components/responses/503'
-        '520':
-          $ref: '#/components/responses/520'
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "409":
+          $ref: "#/components/responses/409"
+        "422":
+          $ref: "#/components/responses/422"
+        "500":
+          $ref: "#/components/responses/500"
+        "503":
+          $ref: "#/components/responses/503"
+        "520":
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     patch:
       summary: Updates partner OP about changes in application compute resource requirements, QOS Profile, associated descriptor or change in associated components
       operationId: UpdateApplication
@@ -2264,12 +2264,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
       requestBody:
         required: true
         description: Details about application compute resource requirements, associated artefact and QOS profile that needs to be updated.
@@ -2352,29 +2352,29 @@ paths:
                         pattern: ^[a-z0-9]([-a-z0-9]{0,62}[a-z0-9])?$
                         description: Must be a valid RFC 1123 label name. Component name must be unique with an application
                       artefactId:
-                        $ref: '#/components/schemas/ArtefactId'
+                        $ref: "#/components/schemas/ArtefactId"
                   minItems: 1
       responses:
         "202":
           description: Application update request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     get:
       summary: Retrieves application details from partner OP
       operationId: ViewApplication
@@ -2385,12 +2385,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
       responses:
         "200":
           description: Application details
@@ -2407,39 +2407,39 @@ paths:
                   - appComponentSpecs
                 properties:
                   appId:
-                    $ref: '#/components/schemas/AppIdentifier'
+                    $ref: "#/components/schemas/AppIdentifier"
                   appProviderId:
-                    $ref: '#/components/schemas/AppProviderId'
+                    $ref: "#/components/schemas/AppProviderId"
                   appDeploymentZones:
                     description: Details about partner OP zones where the application should be made available. This field when specified will instruct the OP to restrict application instantiation only on the listed zones.
                     type: array
                     items:
-                      $ref: '#/components/schemas/ZoneIdentifier'
+                      $ref: "#/components/schemas/ZoneIdentifier"
                     minItems: 1
                   appMetaData:
-                    $ref: '#/components/schemas/AppMetaData'
+                    $ref: "#/components/schemas/AppMetaData"
                   appQoSProfile:
-                    $ref: '#/components/schemas/AppQoSProfile'
+                    $ref: "#/components/schemas/AppQoSProfile"
                   appComponentSpecs:
-                    $ref: '#/components/schemas/AppComponentSpecs'
+                    $ref: "#/components/schemas/AppComponentSpecs"
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/onboarding/app/{appId}/zone/{zoneId}:
     delete:
       summary: Deboards an application from partner OP zones
@@ -2451,38 +2451,38 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
       responses:
         "202":
           description: Application deboard request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/onboarding/app/{appId}/additionalZones:
     post:
       summary: Onboards an existing application to a new zone within partner OP.
@@ -2494,12 +2494,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
       requestBody:
         required: true
         description: Details about new zones where application shall be made available
@@ -2508,29 +2508,29 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/ZoneIdentifier'
+                $ref: "#/components/schemas/ZoneIdentifier"
               minItems: 1
       responses:
         "202":
           description: Application onboarding request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/onboarding/app/{appId}/zoneForbid:
     post:
       summary: Forbid/allow application instantiation on a partner zone
@@ -2542,12 +2542,12 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
       requestBody:
         required: true
         content:
@@ -2562,7 +2562,7 @@ paths:
                 - forbid
               properties:
                 zoneId:
-                  $ref: '#/components/schemas/ZoneIdentifier'
+                  $ref: "#/components/schemas/ZoneIdentifier"
                 forbid:
                   type: boolean
                   description: Value 'true' will forbid application instantiation on this zone. No new instance of the application can be created on this zone.
@@ -2571,23 +2571,23 @@ paths:
         "200":
           description: Application forbid/permit request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/lcm:
     post:
       summary: Instantiates an application on a partner OP zone.
@@ -2599,7 +2599,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         description: Details about application and zones where application instance should be created. It also define a call back URI which the partner OP shall use update home OP about a change in instance status.
         content:
@@ -2615,14 +2615,14 @@ paths:
                 - appInstCallbackLink
               properties:
                 appInstanceId:
-                  $ref: '#/components/schemas/InstanceIdentifier'
+                  $ref: "#/components/schemas/InstanceIdentifier"
                 appId:
-                  $ref: '#/components/schemas/AppIdentifier'
+                  $ref: "#/components/schemas/AppIdentifier"
                 appVersion:
                   type: string
                   description: Version info of the application
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 zoneInfo:
                   type: object
                   required:
@@ -2630,9 +2630,9 @@ paths:
                     - flavourId
                   properties:
                     zoneId:
-                      $ref: '#/components/schemas/ZoneIdentifier'
+                      $ref: "#/components/schemas/ZoneIdentifier"
                     flavourId:
-                      $ref: '#/components/schemas/FlavourId'
+                      $ref: "#/components/schemas/FlavourId"
                     resourceConsumption:
                       type: string
                       enum:
@@ -2647,31 +2647,31 @@ paths:
                       pattern: ^[a-z0-9]([-a-z0-9]{0,62}[a-z0-9])?$
                       description: Resource pool to be used for application instantiation on this zone. Valid only if IE 'resourceConsumption' is set to 'RESERVED_RES_SHALL' or 'RESERVED_RES_PREFER'
                 appInstCallbackLink:
-                  $ref: '#/components/schemas/Uri'
+                  $ref: "#/components/schemas/Uri"
       responses:
         "202":
           description: Application instantiation request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
       callbacks:
         onInstanceStatusEvent:
-          '{$request.body#/appInstCallbackLink}':
+          "{$request.body#/appInstCallbackLink}":
             post:
               requestBody:
                 description: Notification payload.
@@ -2687,23 +2687,23 @@ paths:
                         - appInstanceInfo
                       properties:
                         federationContextId:
-                          $ref: '#/components/schemas/FederationContextId'
+                          $ref: "#/components/schemas/FederationContextId"
                         appId:
-                          $ref: '#/components/schemas/AppIdentifier'
+                          $ref: "#/components/schemas/AppIdentifier"
                         appInstanceId:
-                          $ref: '#/components/schemas/InstanceIdentifier'
+                          $ref: "#/components/schemas/InstanceIdentifier"
                         zoneId:
-                          $ref: '#/components/schemas/ZoneIdentifier'
+                          $ref: "#/components/schemas/ZoneIdentifier"
                         appInstanceInfo:
                           type: object
                           properties:
                             appInstanceState:
-                              $ref: '#/components/schemas/InstanceState'
+                              $ref: "#/components/schemas/InstanceState"
                             message:
                               type: string
                               description: Event information or failure message.
                             accessPointInfo:
-                              $ref: '#/components/schemas/AccessPointInfo'
+                              $ref: "#/components/schemas/AccessPointInfo"
                           minProperties: 1
                         modificationDate:
                           type: string
@@ -2713,23 +2713,23 @@ paths:
                 "204":
                   description: Application instance state notification acknowledged
                 "400":
-                  $ref: '#/components/responses/400'
+                  $ref: "#/components/responses/400"
                 "401":
-                  $ref: '#/components/responses/401'
+                  $ref: "#/components/responses/401"
                 "404":
-                  $ref: '#/components/responses/404'
+                  $ref: "#/components/responses/404"
                 "409":
-                  $ref: '#/components/responses/409'
+                  $ref: "#/components/responses/409"
                 "422":
-                  $ref: '#/components/responses/422'
+                  $ref: "#/components/responses/422"
                 "500":
-                  $ref: '#/components/responses/500'
+                  $ref: "#/components/responses/500"
                 "503":
-                  $ref: '#/components/responses/503'
+                  $ref: "#/components/responses/503"
                 "520":
-                  $ref: '#/components/responses/520'
+                  $ref: "#/components/responses/520"
                 default:
-                  $ref: '#/components/responses/default'
+                  $ref: "#/components/responses/default"
   /{federationContextId}/application/lcm/app/{appId}/instance/{appInstanceId}/zone/{zoneId}:
     get:
       summary: Retrieves an application instance details from partner OP.
@@ -2741,22 +2741,22 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
         - name: appInstanceId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/InstanceIdentifier'
+            $ref: "#/components/schemas/InstanceIdentifier"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
       responses:
         "200":
           description: Application instance details
@@ -2766,28 +2766,28 @@ paths:
                 type: object
                 properties:
                   appInstanceState:
-                    $ref: '#/components/schemas/InstanceState'
+                    $ref: "#/components/schemas/InstanceState"
                   accessPointInfo:
-                    $ref: '#/components/schemas/AccessPointInfo'
+                    $ref: "#/components/schemas/AccessPointInfo"
                 minProperties: 1
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     delete:
       summary: Terminate an application instance on a partner OP zone.
       operationId: RemoveApp
@@ -2798,43 +2798,43 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
         - name: appInstanceId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/InstanceIdentifier'
+            $ref: "#/components/schemas/InstanceIdentifier"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
       responses:
         "200":
           description: Application instance termination request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/application/lcm/app/{appId}/appProvider/{appProviderId}:
     get:
       summary: Retrieves all application instance of partner OP
@@ -2846,17 +2846,17 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: appId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppIdentifier'
+            $ref: "#/components/schemas/AppIdentifier"
         - name: appProviderId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppProviderId'
+            $ref: "#/components/schemas/AppProviderId"
       responses:
         "200":
           description: Application Instance details
@@ -2871,7 +2871,7 @@ paths:
                     - appInstanceInfo
                   properties:
                     zoneId:
-                      $ref: '#/components/schemas/ZoneIdentifier'
+                      $ref: "#/components/schemas/ZoneIdentifier"
                     appInstanceInfo:
                       type: array
                       items:
@@ -2881,29 +2881,29 @@ paths:
                           - appInstanceState
                         properties:
                           appInstIdentifier:
-                            $ref: '#/components/schemas/InstanceIdentifier'
+                            $ref: "#/components/schemas/InstanceIdentifier"
                           appInstanceState:
-                            $ref: '#/components/schemas/InstanceState'
+                            $ref: "#/components/schemas/InstanceState"
                       minItems: 1
                 minItems: 1
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/isv/resource/zone/{zoneId}/appProvider/{appProviderId}:
     post:
       summary: Reserves resources (compute, network and storage)  on a partner OP zone. ISVs registered with home OP reserves resources on a partner OP zone.
@@ -2915,17 +2915,17 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
         - name: appProviderId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppProviderId'
+            $ref: "#/components/schemas/AppProviderId"
       requestBody:
         content:
           application/json:
@@ -2945,9 +2945,9 @@ paths:
                     - reserveDuration
                   properties:
                     poolId:
-                      $ref: '#/components/schemas/PoolId'
+                      $ref: "#/components/schemas/PoolId"
                     poolName:
-                      $ref: '#/components/schemas/PoolName'
+                      $ref: "#/components/schemas/PoolName"
                     flavours:
                       type: array
                       items:
@@ -2957,7 +2957,7 @@ paths:
                           - numFlavour
                         properties:
                           flavourId:
-                            $ref: '#/components/schemas/FlavourId'
+                            $ref: "#/components/schemas/FlavourId"
                           numFlavour:
                             type: integer
                             format: int32
@@ -2968,33 +2968,33 @@ paths:
                             description: If specified, indicate the minimum numbers of flavours to be reserved up to maximum as given in “count” member. If partner OP cannot reserve the minimum number of flavours, then the request shall fail.
                       minItems: 1
                     reserveDuration:
-                      $ref: '#/components/schemas/ResourceReservationDuration'
+                      $ref: "#/components/schemas/ResourceReservationDuration"
                 resourceReservationCallbackLink:
-                  $ref: '#/components/schemas/Uri'
+                  $ref: "#/components/schemas/Uri"
       responses:
         "200":
           description: ISV Resource reservation request accepted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
       callbacks:
         onResourceStatusChangeEvent:
-          '{$request.body#/resourceReservationCallbackLink}':
+          "{$request.body#/resourceReservationCallbackLink}":
             post:
               requestBody:
                 description: Notification payload.
@@ -3010,13 +3010,13 @@ paths:
                         - grantedFlavours
                       properties:
                         federationContextId:
-                          $ref: '#/components/schemas/FederationContextId'
+                          $ref: "#/components/schemas/FederationContextId"
                         zoneId:
-                          $ref: '#/components/schemas/ZoneIdentifier'
+                          $ref: "#/components/schemas/ZoneIdentifier"
                         appProviderId:
-                          $ref: '#/components/schemas/AppProviderId'
+                          $ref: "#/components/schemas/AppProviderId"
                         poolId:
-                          $ref: '#/components/schemas/PoolId'
+                          $ref: "#/components/schemas/PoolId"
                         grantedFlavours:
                           type: array
                           items:
@@ -3026,7 +3026,7 @@ paths:
                               - numFlavour
                             properties:
                               flavourId:
-                                $ref: '#/components/schemas/FlavourId'
+                                $ref: "#/components/schemas/FlavourId"
                               numFlavour:
                                 type: integer
                                 format: int32
@@ -3036,23 +3036,23 @@ paths:
                 "204":
                   description: Updated Resource reservation status updated
                 "400":
-                  $ref: '#/components/responses/400'
+                  $ref: "#/components/responses/400"
                 "401":
-                  $ref: '#/components/responses/401'
+                  $ref: "#/components/responses/401"
                 "404":
-                  $ref: '#/components/responses/404'
+                  $ref: "#/components/responses/404"
                 "409":
-                  $ref: '#/components/responses/409'
+                  $ref: "#/components/responses/409"
                 "422":
-                  $ref: '#/components/responses/422'
+                  $ref: "#/components/responses/422"
                 "500":
-                  $ref: '#/components/responses/500'
+                  $ref: "#/components/responses/500"
                 "503":
-                  $ref: '#/components/responses/503'
+                  $ref: "#/components/responses/503"
                 "520":
-                  $ref: '#/components/responses/520'
+                  $ref: "#/components/responses/520"
                 default:
-                  $ref: '#/components/responses/default'
+                  $ref: "#/components/responses/default"
     get:
       summary: Retrieves the resource pool reserved by an ISV
       operationId: ViewISVResPool
@@ -3063,17 +3063,17 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
         - name: appProviderId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppProviderId'
+            $ref: "#/components/schemas/AppProviderId"
       responses:
         "200":
           description: Reserved Resources Details
@@ -3089,9 +3089,9 @@ paths:
                     - reservedFlavours
                   properties:
                     poolName:
-                      $ref: '#/components/schemas/PoolName'
+                      $ref: "#/components/schemas/PoolName"
                     reservedPoolId:
-                      $ref: '#/components/schemas/PoolId'
+                      $ref: "#/components/schemas/PoolId"
                     reservedFlavours:
                       type: array
                       items:
@@ -3101,36 +3101,36 @@ paths:
                           - count
                         properties:
                           flavourId:
-                            $ref: '#/components/schemas/FlavourId'
+                            $ref: "#/components/schemas/FlavourId"
                           count:
                             type: integer
                             format: int32
                             description: Total number of flavours reserved
                       minItems: 1
                     reserveDuration:
-                      $ref: '#/components/schemas/ResourceReservationDuration'
+                      $ref: "#/components/schemas/ResourceReservationDuration"
                     reservationTime:
                       type: string
                       format: date-time
                       description: Date and time when resources were reserved in UTC format
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/isv/resource/zone/{zoneId}/appProvider/{appProviderId}/pool/{poolId}:
     patch:
       summary: Updates resources reserved for a pool by an ISV
@@ -3142,22 +3142,22 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
         - name: appProviderId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppProviderId'
+            $ref: "#/components/schemas/AppProviderId"
         - name: poolId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/PoolId'
+            $ref: "#/components/schemas/PoolId"
       requestBody:
         content:
           application/json:
@@ -3178,34 +3178,34 @@ paths:
                       - DURATION
                     description: Specify if resource corresponding this flavour needs to added or removed. Field 'count' gives the final total no of such flavours that should be reserved. count 0 means remove all the resources.
                   flavourId:
-                    $ref: '#/components/schemas/FlavourId'
+                    $ref: "#/components/schemas/FlavourId"
                   count:
                     type: integer
                     format: int32
                     description: Total number of flavours to be reserved
                   reserveDuration:
-                    $ref: '#/components/schemas/ResourceReservationDuration'
+                    $ref: "#/components/schemas/ResourceReservationDuration"
       responses:
         "200":
           description: Resource pool updated
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
     delete:
       summary: Deletes the resource pool reserved by an ISV
       operationId: RemoveISVResPool
@@ -3216,43 +3216,43 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: zoneId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/ZoneIdentifier'
+            $ref: "#/components/schemas/ZoneIdentifier"
         - name: appProviderId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AppProviderId'
+            $ref: "#/components/schemas/AppProviderId"
         - name: poolId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/PoolId'
+            $ref: "#/components/schemas/PoolId"
       responses:
         "200":
           description: Resource pool deleted
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/edgenodesharing/edgeDiscovery:
     post:
       summary: Edge discovery procedures towards partner OP over E/WBI. Originating OP request partner OP to provide a list of candidate zones where an application instance can be created. Partner OP applies a set of filtering criteria's to select candidate zones.
@@ -3264,7 +3264,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
       requestBody:
         content:
           application/json:
@@ -3275,34 +3275,34 @@ paths:
                 - appId
               properties:
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 appId:
-                  $ref: '#/components/schemas/AppIdentifier'
+                  $ref: "#/components/schemas/AppIdentifier"
                 edgeDiscoveryFilters:
                   type: object
                   minProperties: 1
                   properties:
                     location:
-                      $ref: '#/components/schemas/ClientLocation'
+                      $ref: "#/components/schemas/ClientLocation"
       responses:
         "200":
           description: List of candidate zones
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DiscoveredEdgeNodes'
+                $ref: "#/components/schemas/DiscoveredEdgeNodes"
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationContextId}/roaminguserauth/device/{deviceId}/token/{authToken}:
     get:
       summary: Validates the authenticity of a roaming user from home OP
@@ -3314,32 +3314,32 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationContextId'
+            $ref: "#/components/schemas/FederationContextId"
         - name: deviceId
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/DeviceId'
+            $ref: "#/components/schemas/DeviceId"
         - name: authToken
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/AuthorizationToken'
+            $ref: "#/components/schemas/AuthorizationToken"
       responses:
         "200":
           description: Device Auth Token validated
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/partnerStatusLink:
     post:
       operationId: PartnerStatusLink
@@ -3348,7 +3348,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: |
           OP uses this callback api to notify partner OP about change in federation status, federation metadata or offered zone details. Allowed combinations of objectType and operationType are
@@ -3373,7 +3373,7 @@ paths:
                 - modificationDate
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 objectType:
                   type: string
                   enum:
@@ -3391,27 +3391,27 @@ paths:
                     - ADD
                     - REMOVE
                 edgeDiscoverySvcEndPoint:
-                  $ref: '#/components/schemas/ServiceEndpoint'
+                  $ref: "#/components/schemas/ServiceEndpoint"
                 lcmSvcEndPoint:
-                  $ref: '#/components/schemas/ServiceEndpoint'
+                  $ref: "#/components/schemas/ServiceEndpoint"
                 addMobileNetworkIds:
-                  $ref: '#/components/schemas/MobileNetworkIds'
+                  $ref: "#/components/schemas/MobileNetworkIds"
                 removeMobileNetworkIds:
-                  $ref: '#/components/schemas/MobileNetworkIds'
+                  $ref: "#/components/schemas/MobileNetworkIds"
                 addFixedNetworkIds:
-                  $ref: '#/components/schemas/FixedNetworkIds'
+                  $ref: "#/components/schemas/FixedNetworkIds"
                 removeFixedNetworkIds:
-                  $ref: '#/components/schemas/FixedNetworkIds'
+                  $ref: "#/components/schemas/FixedNetworkIds"
                 addZones:
                   type: array
                   items:
-                    $ref: '#/components/schemas/ZoneDetails'
+                    $ref: "#/components/schemas/ZoneDetails"
                   description: List of zones, which the operator platform wishes to make available to developers/ISVs of requesting operator platform.
                   minItems: 1
                 removeZones:
                   type: array
                   items:
-                    $ref: '#/components/schemas/ZoneIdentifier'
+                    $ref: "#/components/schemas/ZoneIdentifier"
                   description: List of zones, which the operator platform no longer wishes to share.
                   minItems: 1
                 zoneStatus:
@@ -3423,12 +3423,12 @@ paths:
                       - status
                     properties:
                       zoneId:
-                        $ref: '#/components/schemas/ZoneIdentifier'
+                        $ref: "#/components/schemas/ZoneIdentifier"
                       status:
-                        $ref: '#/components/schemas/Status'
+                        $ref: "#/components/schemas/Status"
                   minItems: 1
                 federationStatus:
-                  $ref: '#/components/schemas/Status'
+                  $ref: "#/components/schemas/Status"
                 modificationDate:
                   type: string
                   format: date-time
@@ -3437,23 +3437,23 @@ paths:
         "204":
           description: Expected response to a successful call back processing
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/availZoneNotifLink:
     post:
       operationId: AvailZoneNotifLink
@@ -3462,7 +3462,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification about resource availability.
         content:
@@ -3475,9 +3475,9 @@ paths:
                 - zoneResUpdInfo
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 zoneId:
-                  $ref: '#/components/schemas/ZoneIdentifier'
+                  $ref: "#/components/schemas/ZoneIdentifier"
                 zoneResUpdInfo:
                   type: array
                   items:
@@ -3488,7 +3488,7 @@ paths:
                         description: Resources exclusively reserved for the originator OP.
                         type: array
                         items:
-                          $ref: '#/components/schemas/ComputeResourceInfo'
+                          $ref: "#/components/schemas/ComputeResourceInfo"
                         minItems: 1
                       availableNetResources:
                         type: object
@@ -3511,23 +3511,23 @@ paths:
         "200":
           description: Zone info notification acknowledged
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/appStatusCallbackLink:
     post:
       operationId: AppStatusCallbackLink
@@ -3536,7 +3536,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification payload.
         content:
@@ -3549,9 +3549,9 @@ paths:
                 - statusInfo
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 appId:
-                  $ref: '#/components/schemas/AppIdentifier'
+                  $ref: "#/components/schemas/AppIdentifier"
                 statusInfo:
                   type: array
                   items:
@@ -3561,7 +3561,7 @@ paths:
                       - onboardStatusInfo
                     properties:
                       zoneId:
-                        $ref: '#/components/schemas/ZoneIdentifier'
+                        $ref: "#/components/schemas/ZoneIdentifier"
                       onboardStatusInfo:
                         description: Defines change in application status. This change could be related to application itself or an application instance status
                         type: string
@@ -3576,23 +3576,23 @@ paths:
         "204":
           description: Application status updated
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/artefactStatusCallbackLink:
     post:
       operationId: ArtefactStatusCallbackLink
@@ -3601,7 +3601,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification payload.
         content:
@@ -3614,9 +3614,9 @@ paths:
                 - updateStatus
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 artefactId:
-                  $ref: '#/components/schemas/ArtefactId'
+                  $ref: "#/components/schemas/ArtefactId"
                 updateStatus:
                   description: Defines change in application status. This change could be related to application itself or an application instance status
                   type: string
@@ -3629,23 +3629,23 @@ paths:
         "204":
           description: Artefact status updated
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/fileStatusCallbackLink:
     post:
       operationId: FileStatusCallbackLink
@@ -3654,7 +3654,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification payload.
         content:
@@ -3667,9 +3667,9 @@ paths:
                 - updateStatus
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 fileId:
-                  $ref: '#/components/schemas/FileId'
+                  $ref: "#/components/schemas/FileId"
                 updateStatus:
                   description: Defines change in application status. This change could be related to application itself or an application instance status
                   type: string
@@ -3682,23 +3682,23 @@ paths:
         "204":
           description: Artefact status updated
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/appInstCallbackLink:
     post:
       operationId: AppInstCallbackLink
@@ -3707,7 +3707,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification payload.
         content:
@@ -3722,23 +3722,23 @@ paths:
                 - appInstanceInfo
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 appId:
-                  $ref: '#/components/schemas/AppIdentifier'
+                  $ref: "#/components/schemas/AppIdentifier"
                 appInstanceId:
-                  $ref: '#/components/schemas/InstanceIdentifier'
+                  $ref: "#/components/schemas/InstanceIdentifier"
                 zoneId:
-                  $ref: '#/components/schemas/ZoneIdentifier'
+                  $ref: "#/components/schemas/ZoneIdentifier"
                 appInstanceInfo:
                   type: object
                   properties:
                     appInstanceState:
-                      $ref: '#/components/schemas/InstanceState'
+                      $ref: "#/components/schemas/InstanceState"
                     message:
                       type: string
                       description: Event information or failure message.
                     accesspointInfo:
-                      $ref: '#/components/schemas/AccessPointInfo'
+                      $ref: "#/components/schemas/AccessPointInfo"
                   minProperties: 1
                 modificationDate:
                   type: string
@@ -3748,23 +3748,23 @@ paths:
         "204":
           description: Application instance state notification acknowledged
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"
   /{federationCallbackId}/resourceReservationCallbackLink:
     post:
       operationId: ResourceReservationCallbackLink
@@ -3773,7 +3773,7 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/FederationCallbackId'
+            $ref: "#/components/schemas/FederationCallbackId"
       requestBody:
         description: Notification payload.
         content:
@@ -3788,13 +3788,13 @@ paths:
                 - grantedFlavours
               properties:
                 federationContextId:
-                  $ref: '#/components/schemas/FederationContextId'
+                  $ref: "#/components/schemas/FederationContextId"
                 zoneId:
-                  $ref: '#/components/schemas/ZoneIdentifier'
+                  $ref: "#/components/schemas/ZoneIdentifier"
                 appProviderId:
-                  $ref: '#/components/schemas/AppProviderId'
+                  $ref: "#/components/schemas/AppProviderId"
                 poolId:
-                  $ref: '#/components/schemas/PoolId'
+                  $ref: "#/components/schemas/PoolId"
                 grantedFlavours:
                   type: array
                   items:
@@ -3804,7 +3804,7 @@ paths:
                       - numFlavour
                     properties:
                       flavourId:
-                        $ref: '#/components/schemas/FlavourId'
+                        $ref: "#/components/schemas/FlavourId"
                       numFlavour:
                         type: integer
                         format: int32
@@ -3814,20 +3814,20 @@ paths:
         "204":
           description: Updated Resource reservation status updated
         "400":
-          $ref: '#/components/responses/400'
+          $ref: "#/components/responses/400"
         "401":
-          $ref: '#/components/responses/401'
+          $ref: "#/components/responses/401"
         "404":
-          $ref: '#/components/responses/404'
+          $ref: "#/components/responses/404"
         "409":
-          $ref: '#/components/responses/409'
+          $ref: "#/components/responses/409"
         "422":
-          $ref: '#/components/responses/422'
+          $ref: "#/components/responses/422"
         "500":
-          $ref: '#/components/responses/500'
+          $ref: "#/components/responses/500"
         "503":
-          $ref: '#/components/responses/503'
+          $ref: "#/components/responses/503"
         "520":
-          $ref: '#/components/responses/520'
+          $ref: "#/components/responses/520"
         default:
-          $ref: '#/components/responses/default'
+          $ref: "#/components/responses/default"

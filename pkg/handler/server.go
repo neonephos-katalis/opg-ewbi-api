@@ -77,7 +77,7 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 			Detail: &detail,
 		})
 	}
-	if _, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
+	if _,_, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
 		InstallAppJSONBody:  &request,
 		FederationContextID: federationContextId,
 	}); err != nil {
@@ -120,7 +120,7 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 		})
 	}
 
-	if err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
+	if _,err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
 		OnboardApplicationJSONBody: &request,
 		FederationContextId:        federationContextId,
 	}); err != nil {
@@ -171,13 +171,22 @@ func (h *handler) UploadArtefact(c echo.Context, federationContextId models.Fede
 		})
 	}
 
-	if err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
+	if _,err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
 		UploadArtefactMultipartBody: request,
 		FederationContextId:         federationContextId,
 	}); err != nil {
 		return sendErrorResponseFromError(c, err)
 	}
 
+	return c.JSON(http.StatusOK, nil)
+}
+
+// Removes an artefact from partner OP.
+// (DELETE /{federationContextId}/artefact/{artefactId})
+func (h *handler) RemoveArtefact(c echo.Context, federationContextId models.FederationContextId, artefactId models.ArtefactId) error {
+	if err := h.metaStoreClient.RemoveArtefact(h.getRequestContextFunc(c), federationContextId, artefactId); err != nil {
+		return sendErrorResponseFromError(c, err)
+	}
 	return c.JSON(http.StatusOK, nil)
 }
 
@@ -204,7 +213,7 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 		})
 	}
 
-	if err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
+	if _,err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
 		UploadFileMultipartBody: request,
 		FederationContextId:     federationContextId,
 	}); err != nil {
