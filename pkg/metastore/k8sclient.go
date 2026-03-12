@@ -3,7 +3,6 @@ package metastore
 import (
 	"context"
 
-	"github.com/iancoleman/strcase"
 	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -270,7 +269,7 @@ func (c *k8sClient) UpdateFileStatus(ctx context.Context, federationCallbackID s
 	if !ok {
 		return missMatchErr("file", id, federationCallbackID, &opgv1beta1.File{}, obj)
 	}
-	state := strcase.ToCamel(string(updates.UpdateStatus))
+	state := string(updates.UpdateStatus)
 	if isValidFileStatus(state) {
 		return c.updateK8sObjectStatus(res, state)
 	}
@@ -287,7 +286,7 @@ func (c *k8sClient) UpdateArtefactStatus(ctx context.Context, federationCallback
 	if !ok {
 		return missMatchErr("artefact", id, federationCallbackID, &opgv1beta1.Artefact{}, obj)
 	}
-	state := strcase.ToCamel(string(updates.UpdateStatus))
+	state := string(updates.UpdateStatus)
 	if isValidArtefactStatus(state) {
 		return c.updateK8sObjectStatus(res, state)
 	}
@@ -305,7 +304,7 @@ func (c *k8sClient) UpdateApplicationStatus(ctx context.Context, federationCallb
 		return missMatchErr("application", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if len(updates.StatusInfo) > 0 {
-		state := strcase.ToCamel(string(updates.StatusInfo[0].OnboardStatusInfo))
+		state := string(updates.StatusInfo[0].OnboardStatusInfo)
 		if isValidApplicationStatus(state) {
 			return c.updateK8sObjectStatus(res, state)
 		}
@@ -324,7 +323,7 @@ func (c *k8sClient) UpdateApplicationInstanceStatus(ctx context.Context, federat
 		return missMatchErr("application instance", id, federationCallbackID, &opgv1beta1.ApplicationInstance{}, obj)
 	}
 	if updates.AppInstanceInfo.AppInstanceState != nil {
-		state := strcase.ToCamel(string(*updates.AppInstanceInfo.AppInstanceState))
+		state := string(*updates.AppInstanceInfo.AppInstanceState)
 		if isValidApplicationInstanceStatus(state) {
 			return c.updateK8sObjectAppInstStatus(res, updates)
 		}
@@ -345,7 +344,7 @@ func (c *k8sClient) UpdateFederationStatus(ctx context.Context, federationCallba
 		return missMatchErr("federation", federationCallbackID, federationCallbackID, &opgv1beta1.Federation{}, obj)
 	}
 
-	state := strcase.ToCamel(string(status))
+	state := string(status)
 	if isValidFederationStatus(state) {
 		return c.updateK8sObjectStatus(res, state)
 	}
