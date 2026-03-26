@@ -14,7 +14,7 @@ require (
 	github.com/icza/gog v0.0.0-20241010132004-5da24f18211d
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/neonephos-katalis/opg-ewbi-operator v1.1.3-dev-callback-1.1.3
+	github.com/neonephos-katalis/opg-ewbi-operator v1.0.0-cb
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.4
