@@ -11,15 +11,14 @@ require (
 	github.com/deepmap/oapi-codegen v1.12.4
 	github.com/getkin/kin-openapi v0.112.0
 	github.com/google/uuid v1.6.0
-	github.com/iancoleman/strcase v0.3.0
 	github.com/icza/gog v0.0.0-20241010132004-5da24f18211d
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/neonephos-katalis/opg-ewbi-operator v0.0.2
+	github.com/neonephos-katalis/opg-ewbi-operator v1.0.0-cb
 	github.com/oapi-codegen/runtime v1.1.1
 	github.com/pkg/errors v0.9.1
-	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.9.0
+	github.com/sirupsen/logrus v1.9.4
+	github.com/stretchr/testify v1.10.0
 	k8s.io/apimachinery v0.32.0
 	sigs.k8s.io/controller-runtime v0.19.1
 )

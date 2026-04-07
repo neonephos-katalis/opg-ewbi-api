@@ -63,3 +63,7 @@ func isValidApplicationInstanceStatus(status string) bool {
 func k8sCustomResourceNameFromApplicationInstance(federationContextID, appID string) string {
 	return fmt.Sprintf("%s-%s", applicationInstancePrefix, uuidV5Fn(federationContextID+"/"+appID))
 }
+
+func applicationInstanceFromK8sCustomResource(appInstanceID string, appInstance opgv1beta1.ApplicationInstance) (*ApplicationInstanceDetails, error) {
+	return &ApplicationInstanceDetails{}, nil
+}

@@ -77,8 +77,7 @@ func (h *handler) InstallApp(c echo.Context, federationContextId models.Federati
 			Detail: &detail,
 		})
 	}
-
-	if _, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
+	if _,_, err := h.depClient.Install(h.getRequestContextFunc(c), &deployment.InstallDeployment{
 		InstallAppJSONBody:  &request,
 		FederationContextID: federationContextId,
 	}); err != nil {
@@ -121,7 +120,7 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 		})
 	}
 
-	if err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
+	if _,err := h.metaStoreClient.OnboardApplication(ctx, &metastore.OnboardApplication{
 		OnboardApplicationJSONBody: &request,
 		FederationContextId:        federationContextId,
 	}); err != nil {
@@ -130,7 +129,6 @@ func (h *handler) OnboardApplication(c echo.Context, federationContextId models.
 
 	return c.JSON(http.StatusAccepted, nil)
 }
-
 // Deboards the application from any zones, if any, and deletes the App.
 // (GET /{federationContextId}/application/onboarding/app/{appId})
 func (h *handler) DeleteApp(c echo.Context, federationContextId models.FederationContextId, appId string) error {
@@ -173,7 +171,7 @@ func (h *handler) UploadArtefact(c echo.Context, federationContextId models.Fede
 		})
 	}
 
-	if err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
+	if _,err := h.metaStoreClient.UploadArtefact(ctx, &metastore.UploadArtefact{
 		UploadArtefactMultipartBody: request,
 		FederationContextId:         federationContextId,
 	}); err != nil {
@@ -215,7 +213,7 @@ func (h *handler) UploadFile(c echo.Context, federationContextId models.Federati
 		})
 	}
 
-	if err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
+	if _,err := h.metaStoreClient.UploadFile(ctx, &metastore.UploadFile{
 		UploadFileMultipartBody: request,
 		FederationContextId:     federationContextId,
 	}); err != nil {
