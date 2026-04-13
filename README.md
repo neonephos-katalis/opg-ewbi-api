@@ -113,6 +113,10 @@ This service:
 └── Dockerfile.apigen          # API generator Docker image
 ```
 
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. All PRs must follow conventional commits and the PR template.
+
 ## License
 
 See [LICENSE](LICENSE) file for details.
